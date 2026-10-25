@@ -1,0 +1,113 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    /* Locked Color Palette */
+    --cosmic-latte: #FDFBF7;
+    --cosmic-latte-soft: #FAF6EE;
+    --mocha-cream: #F2ECE1;
+    --mocha-cream-deep: #E8E0CE;
+    --mocha-cream-light: #F8F4EC;
+    --deep-burgundy: #5B1924;
+    --deep-burgundy-hover: #48131C;
+    --deep-burgundy-light: rgba(91, 25, 36, 0.07);
+    --deep-burgundy-border: rgba(91, 25, 36, 0.18);
+
+    /* Text Tokens */
+    --text-primary: #1C1817;
+    --text-secondary: #5E564E;
+    --text-muted: #8C8379;
+    --border-warm: #E6DFD3;
+    --border-hover: #D8CEBD;
+
+    --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    --font-serif: 'Playfair Display', Georgia, serif;
+  }
+
+  body {
+    background-color: var(--cosmic-latte);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    selection-background-color: var(--deep-burgundy);
+    selection-color: var(--cosmic-latte);
+  }
+}
+
+::selection {
+  background-color: #5B1924;
+  color: #FDFBF7;
+}
+
+/* Custom scrollbar for warm aesthetic */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #F2ECE1;
+}
+::-webkit-scrollbar-thumb {
+  background: #D8CEBD;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #5B1924;
+}
+
+/* Color Helper Utility Classes */
+.bg-cosmic-latte {
+  background-color: var(--cosmic-latte);
+}
+.bg-mocha-cream {
+  background-color: var(--mocha-cream);
+}
+.bg-mocha-cream-light {
+  background-color: var(--mocha-cream-light);
+}
+.bg-deep-burgundy {
+  background-color: var(--deep-burgundy);
+}
+.text-deep-burgundy {
+  color: var(--deep-burgundy);
+}
+.border-deep-burgundy {
+  border-color: var(--deep-burgundy);
+}
+.border-mocha-cream {
+  border-color: var(--border-warm);
+}
+
+/* Editorial Typography */
+.font-editorial {
+  font-family: 'Playfair Display', Georgia, serif;
+}
+
+/* Subtle Editorial Border Cards */
+.editorial-card {
+  background-color: var(--mocha-cream);
+  border: 1px solid var(--border-warm);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.editorial-card:hover {
+  border-color: var(--deep-burgundy-border);
+  box-shadow: 0 10px 30px -10px rgba(91, 25, 36, 0.08);
+}
+
+.editorial-card-white {
+  background-color: #FFFFFF;
+  border: 1px solid var(--border-warm);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.editorial-card-white:hover {
+  border-color: var(--deep-burgundy-border);
+  box-shadow: 0 12px 36px -12px rgba(91, 25, 36, 0.08);
+}
+
+/* Smooth Scrolling */
+html {
+  scroll-behavior: smooth;
+}
