@@ -5,34 +5,34 @@ export const WhatIsSection: React.FC = () => {
   return (
     <section
       id="what-is"
-      className="relative z-10 pt-20 md:pt-24 pb-20 md:pb-28 bg-[#F2ECE1] border-y border-[#E6DFD3]"
+      className="relative z-10 pt-14 sm:pt-20 md:pt-24 pb-14 sm:pb-20 md:pb-28 bg-[#F2ECE1] border-y border-[#E6DFD3]"
     >
-      <div className="max-w-7xl mx-auto px-8 sm:px-12 md:px-16 lg:px-24">
+      <div className="max-w-7xl mx-auto px-5 sm:px-8 md:px-14 lg:px-24">
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 pb-4 border-b border-[#E6DFD3]">
           <div>
             <span className="text-xs font-semibold tracking-widest uppercase text-[#5B1924] mb-2 block">
               01 — Overview
             </span>
-            <h2 className="font-editorial text-4xl sm:text-5xl md:text-6xl font-normal text-[#1C1817]">
+            <h2 className="font-editorial text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-normal text-[#1C1817]">
               What is ClosetBrain?
             </h2>
           </div>
-          <p className="text-sm sm:text-base text-[#5E564E] max-w-md mt-4 md:mt-0 leading-relaxed">
+          <p className="text-sm sm:text-base text-[#5E564E] max-w-md mt-3 md:mt-0 leading-relaxed">
             ClosetBrain bridges your physical wardrobe with digital intelligence, solving the everyday dilemma of what to wear.
           </p>
         </div>
 
         {/* Problem vs Solution Editorial Showcase Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 mb-12 sm:mb-16">
           {/* Card 1: The Problem */}
-          <div className="bg-[#FDFBF7] p-8 sm:p-10 rounded-3xl border border-[#E6DFD3] flex flex-col justify-between space-y-6">
+          <div className="bg-[#FDFBF7] p-6 sm:p-8 md:p-10 rounded-2xl sm:rounded-3xl border border-[#E6DFD3] flex flex-col justify-between space-y-6">
             <div className="space-y-4">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider bg-red-50 text-red-800 border border-red-200">
                 <AlertCircle className="w-3.5 h-3.5" />
                 The Problem
               </div>
-              <h3 className="font-editorial text-2xl sm:text-3xl font-medium text-[#1C1817]">
+              <h3 className="font-editorial text-xl sm:text-2xl md:text-3xl font-medium text-[#1C1817]">
                 Overflowing closets, zero inspiration.
               </h3>
               <p className="text-[#5E564E] leading-relaxed text-sm sm:text-base">
@@ -57,13 +57,13 @@ export const WhatIsSection: React.FC = () => {
           </div>
 
           {/* Card 2: The Solution */}
-          <div className="bg-[#FDFBF7] p-8 sm:p-10 rounded-3xl border border-[#E6DFD3] flex flex-col justify-between space-y-6">
+          <div className="bg-[#FDFBF7] p-6 sm:p-8 md:p-10 rounded-2xl sm:rounded-3xl border border-[#E6DFD3] flex flex-col justify-between space-y-6">
             <div className="space-y-4">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider bg-[#5B1924]/10 text-[#5B1924] border border-[#5B1924]/20">
                 <CheckCircle2 className="w-3.5 h-3.5" />
                 The ClosetBrain Solution
               </div>
-              <h3 className="font-editorial text-2xl sm:text-3xl font-medium text-[#1C1817]">
+              <h3 className="font-editorial text-xl sm:text-2xl md:text-3xl font-medium text-[#1C1817]">
                 Your personal digital style companion.
               </h3>
               <p className="text-[#5E564E] leading-relaxed text-sm sm:text-base">
@@ -89,32 +89,32 @@ export const WhatIsSection: React.FC = () => {
         </div>
 
         {/* 3 Core Value Pillars */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-[#FDFBF7]/80 p-6 rounded-2xl border border-[#E6DFD3]">
-            <div className="w-10 h-10 rounded-xl bg-[#5B1924] text-[#FDFBF7] flex items-center justify-center mb-4 font-semibold text-sm">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+          <div className="bg-[#FDFBF7]/80 p-5 sm:p-6 rounded-2xl border border-[#E6DFD3]">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[#5B1924] text-[#FDFBF7] flex items-center justify-center mb-4 font-semibold text-sm">
               01
             </div>
-            <h4 className="font-editorial text-xl font-medium text-[#1C1817] mb-2">Digital Wardrobe</h4>
+            <h4 className="font-editorial text-lg sm:text-xl font-medium text-[#1C1817] mb-2">Digital Wardrobe</h4>
             <p className="text-xs sm:text-sm text-[#5E564E] leading-relaxed">
               Organize shirts, trousers, jackets, and accessories into structured categories with tags for color, season, and formality.
             </p>
           </div>
 
-          <div className="bg-[#FDFBF7]/80 p-6 rounded-2xl border border-[#E6DFD3]">
-            <div className="w-10 h-10 rounded-xl bg-[#5B1924] text-[#FDFBF7] flex items-center justify-center mb-4 font-semibold text-sm">
+          <div className="bg-[#FDFBF7]/80 p-5 sm:p-6 rounded-2xl border border-[#E6DFD3]">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[#5B1924] text-[#FDFBF7] flex items-center justify-center mb-4 font-semibold text-sm">
               02
             </div>
-            <h4 className="font-editorial text-xl font-medium text-[#1C1817] mb-2">Intelligent Styling</h4>
+            <h4 className="font-editorial text-lg sm:text-xl font-medium text-[#1C1817] mb-2">Intelligent Styling</h4>
             <p className="text-xs sm:text-sm text-[#5E564E] leading-relaxed">
               Curate outfits automatically based on occasion, weather, layer combinations, and aesthetic harmony.
             </p>
           </div>
 
-          <div className="bg-[#FDFBF7]/80 p-6 rounded-2xl border border-[#E6DFD3]">
-            <div className="w-10 h-10 rounded-xl bg-[#5B1924] text-[#FDFBF7] flex items-center justify-center mb-4 font-semibold text-sm">
+          <div className="bg-[#FDFBF7]/80 p-5 sm:p-6 rounded-2xl border border-[#E6DFD3]">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[#5B1924] text-[#FDFBF7] flex items-center justify-center mb-4 font-semibold text-sm">
               03
             </div>
-            <h4 className="font-editorial text-xl font-medium text-[#1C1817] mb-2">Sustainable Curation</h4>
+            <h4 className="font-editorial text-lg sm:text-xl font-medium text-[#1C1817] mb-2">Sustainable Curation</h4>
             <p className="text-xs sm:text-sm text-[#5E564E] leading-relaxed">
               Rediscover garments you forgot you owned, eliminate unworn clutter, and shop far more intentionally.
             </p>

@@ -40,20 +40,18 @@
   color: #FDFBF7;
 }
 
-/* Custom scrollbar for warm aesthetic */
+/* Hide scrollbar visually while preserving normal mouse, touch, and keyboard scrolling */
+html,
+body {
+  scrollbar-width: none; /* Firefox & standard */
+  -ms-overflow-style: none; /* IE & legacy Edge */
+}
+
+*::-webkit-scrollbar,
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-::-webkit-scrollbar-track {
-  background: #F2ECE1;
-}
-::-webkit-scrollbar-thumb {
-  background: #D8CEBD;
-  border-radius: 9999px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #5B1924;
+  display: none; /* Chrome, Safari, Edge, Opera */
+  width: 0;
+  height: 0;
 }
 
 /* Color Helper Utility Classes */
@@ -107,7 +105,19 @@
   box-shadow: 0 12px 36px -12px rgba(91, 25, 36, 0.08);
 }
 
-/* Smooth Scrolling */
+/* Smooth Scrolling & Overflow Containment */
+html,
+body {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
 html {
   scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
 }

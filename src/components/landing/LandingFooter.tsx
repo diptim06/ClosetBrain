@@ -7,16 +7,16 @@ interface LandingFooterProps {
 
 export const LandingFooter: React.FC<LandingFooterProps> = ({ onOpenApp }) => {
   return (
-    <footer className="relative z-40 w-full bg-[#FDFBF7] border-t border-[#E6DFD3] py-16 text-[#5E564E]">
-      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8 pb-12 border-b border-[#E6DFD3]">
+    <footer className="relative z-20 w-full bg-[#FDFBF7] border-t border-[#E6DFD3] py-12 sm:py-16 text-[#5E564E]">
+      <div className="max-w-7xl mx-auto px-5 sm:px-8 md:px-14 lg:px-24">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8 pb-10 sm:pb-12 border-b border-[#E6DFD3]">
           {/* Logo & Tagline */}
           <div className="space-y-3">
             <div className="flex items-center gap-2">
               <div className="w-7 h-7 rounded-full bg-[#5B1924] flex items-center justify-center text-[#FDFBF7]">
                 <Sparkles className="w-3.5 h-3.5" />
               </div>
-              <span className="font-editorial text-2xl font-semibold text-[#1C1817]">
+              <span className="font-editorial text-xl sm:text-2xl font-semibold text-[#1C1817]">
                 ClosetBrain
               </span>
             </div>
@@ -26,7 +26,7 @@ export const LandingFooter: React.FC<LandingFooterProps> = ({ onOpenApp }) => {
           </div>
 
           {/* Minimal Links */}
-          <div className="flex flex-wrap gap-8 text-sm font-medium text-[#5E564E]">
+          <div className="flex flex-wrap gap-4 sm:gap-6 lg:gap-8 text-xs sm:text-sm font-medium text-[#5E564E]">
             <a href="#what-is" className="hover:text-[#5B1924] transition-colors">
               What is ClosetBrain
             </a>

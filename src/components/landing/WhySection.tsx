@@ -26,45 +26,45 @@ export const WhySection: React.FC = () => {
   ];
 
   return (
-    <section id="why-use" className="py-24 md:py-32 bg-[#F2ECE1] border-y border-[#E6DFD3]">
-      <div className="max-w-7xl mx-auto px-8 sm:px-12 md:px-16 lg:px-24">
+    <section id="why-use" className="py-14 sm:py-20 md:py-32 bg-[#F2ECE1] border-y border-[#E6DFD3]">
+      <div className="max-w-7xl mx-auto px-5 sm:px-8 md:px-14 lg:px-24">
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 pb-6 border-b border-[#E6DFD3]">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 sm:mb-16 pb-4 sm:pb-6 border-b border-[#E6DFD3]">
           <div>
             <span className="text-xs font-semibold tracking-widest uppercase text-[#5B1924] mb-2 block">
               03 — Benefits
             </span>
-            <h2 className="font-editorial text-4xl sm:text-5xl md:text-6xl font-normal text-[#1C1817]">
+            <h2 className="font-editorial text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-normal text-[#1C1817]">
               Why use ClosetBrain?
             </h2>
           </div>
-          <p className="text-sm sm:text-base text-[#5E564E] max-w-md mt-4 md:mt-0 leading-relaxed">
+          <p className="text-sm sm:text-base text-[#5E564E] max-w-md mt-3 md:mt-0 leading-relaxed">
             Elevate your daily routine, unlock hidden closet value, and eliminate morning stress forever.
           </p>
         </div>
 
         {/* 4 Reasons Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-8">
           {reasons.map((reason, index) => (
             <div
               key={reason.title}
-              className="bg-[#FDFBF7] p-8 sm:p-10 rounded-3xl border border-[#E6DFD3] hover:border-[#5B1924]/30 hover:shadow-sm transition-all flex flex-col justify-between space-y-6"
+              className="bg-[#FDFBF7] p-6 sm:p-8 md:p-10 rounded-2xl sm:rounded-3xl border border-[#E6DFD3] hover:border-[#5B1924]/30 hover:shadow-sm transition-all flex flex-col justify-between space-y-6"
             >
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <div className="w-12 h-12 rounded-2xl bg-[#F2ECE1] text-[#5B1924] flex items-center justify-center border border-[#E6DFD3]">
-                    <reason.icon className="w-6 h-6" />
+                  <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-[#F2ECE1] text-[#5B1924] flex items-center justify-center border border-[#E6DFD3]">
+                    <reason.icon className="w-5 h-5 sm:w-6 sm:h-6" />
                   </div>
-                  <span className="font-editorial text-3xl font-light text-[#5B1924]">
+                  <span className="font-editorial text-2xl sm:text-3xl font-light text-[#5B1924]">
                     0{index + 1}
                   </span>
                 </div>
 
-                <h3 className="font-editorial text-2xl sm:text-3xl font-medium text-[#1C1817]">
+                <h3 className="font-editorial text-xl sm:text-2xl md:text-3xl font-medium text-[#1C1817]">
                   {reason.title}
                 </h3>
 
-                <p className="text-[#5E564E] leading-relaxed text-sm sm:text-base">
+                <p className="text-[#5E564E] leading-relaxed text-xs sm:text-sm md:text-base">
                   {reason.desc}
                 </p>
               </div>
