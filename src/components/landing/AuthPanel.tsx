@@ -1,11 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { Sparkles, X, ArrowRight, ArrowLeft, ShieldAlert } from 'lucide-react';
+import { Sparkles, X, ArrowRight, ArrowLeft, Loader2, AlertCircle } from 'lucide-react';
 import { AnimatedBackground } from '@/components/core/animated-background';
+
+export interface AuthUser {
+  id: string;
+  name: string;
+  email: string;
+  createdAt?: string;
+}
 
 interface AuthPanelProps {
   authProgress: number;
   onClose: () => void;
   onOpenApp?: () => void;
+  onAuthSuccess?: (user: AuthUser) => void;
   prefersReducedMotion?: boolean;
   isMobile?: boolean;
 }
@@ -14,6 +22,7 @@ export const AuthPanel: React.FC<AuthPanelProps> = ({
   authProgress,
   onClose,
   onOpenApp,
+  onAuthSuccess,
   prefersReducedMotion = false,
   isMobile = false,
 }) => {
@@ -23,7 +32,8 @@ export const AuthPanel: React.FC<AuthPanelProps> = ({
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
-  const [submittedStatus, setSubmittedStatus] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   // Close on Escape key
   useEffect(() => {
@@ -36,14 +46,51 @@ export const AuthPanel: React.FC<AuthPanelProps> = ({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [onClose]);
 
-  // Handle mock submission
-  const handleSubmit = (e: React.FormEvent) => {
+  // Handle form submission to real backend
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmittedStatus(
-      tab === 'Login'
-        ? 'Authentication is not connected in this preview build. Sign in is simulated.'
-        : 'Authentication is not connected in this preview build. Account creation is simulated.'
-    );
+    setErrorMessage(null);
+    setIsLoading(true);
+
+    try {
+      const endpoint = tab === 'Login' ? '/api/auth/login' : '/api/auth/signup';
+      const payload =
+        tab === 'Login'
+          ? { email: email.trim(), password }
+          : { name: name.trim(), email: email.trim(), password };
+
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify(payload),
+      });
+
+      const data = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        setErrorMessage(
+          data.error || 'Authentication failed. Please verify your credentials and try again.'
+        );
+        return;
+      }
+
+      // Success
+      if (data.user && onAuthSuccess) {
+        onAuthSuccess(data.user);
+      } else if (onOpenApp) {
+        onOpenApp();
+      }
+    } catch (err) {
+      console.error('Authentication request error:', err);
+      setErrorMessage(
+        'Unable to connect to the authentication server. Please check your network and ensure the backend server is running.'
+      );
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   // Smooth entrance interpolation
@@ -109,7 +156,7 @@ export const AuthPanel: React.FC<AuthPanelProps> = ({
             onValueChange={(id) => {
               if (id === 'Login' || id === 'Sign Up') {
                 setTab(id);
-                setSubmittedStatus(null);
+                setErrorMessage(null);
               }
             }}
             className="rounded-full bg-[#5B1924] shadow-sm"
@@ -152,6 +199,14 @@ export const AuthPanel: React.FC<AuthPanelProps> = ({
           </p>
         </div>
 
+        {/* Inline Error Banner */}
+        {errorMessage && (
+          <div className="mb-4 p-3 rounded-xl bg-[#FDF2F2] border border-[#F2C9CE] text-xs flex items-start gap-2.5 text-[#882434] animate-in fade-in duration-200">
+            <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-[#882434]" />
+            <p className="font-medium leading-relaxed">{errorMessage}</p>
+          </div>
+        )}
+
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-3.5">
           {tab === 'Sign Up' && (
@@ -166,10 +221,14 @@ export const AuthPanel: React.FC<AuthPanelProps> = ({
                 id="auth-name"
                 type="text"
                 required
+                disabled={isLoading}
                 value={name}
-                onChange={(e) => setName(e.target.value)}
+                onChange={(e) => {
+                  setName(e.target.value);
+                  if (errorMessage) setErrorMessage(null);
+                }}
                 placeholder="Eleanor Vance"
-                className="w-full px-3.5 py-2 sm:py-2.5 rounded-xl bg-[#FDFBF7] border border-[#E6DFD3] text-sm text-[#1C1817] placeholder-[#8C8379] focus:outline-none focus:border-[#5B1924] focus:ring-1 focus:ring-[#5B1924] transition-all"
+                className="w-full px-3.5 py-2 sm:py-2.5 rounded-xl bg-[#FDFBF7] border border-[#E6DFD3] text-sm text-[#1C1817] placeholder-[#8C8379] focus:outline-none focus:border-[#5B1924] focus:ring-1 focus:ring-[#5B1924] transition-all disabled:opacity-60"
               />
             </div>
           )}
@@ -185,10 +244,14 @@ export const AuthPanel: React.FC<AuthPanelProps> = ({
               id="auth-email"
               type="email"
               required
+              disabled={isLoading}
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                if (errorMessage) setErrorMessage(null);
+              }}
               placeholder="you@example.com"
-              className="w-full px-3.5 py-2 sm:py-2.5 rounded-xl bg-[#FDFBF7] border border-[#E6DFD3] text-sm text-[#1C1817] placeholder-[#8C8379] focus:outline-none focus:border-[#5B1924] focus:ring-1 focus:ring-[#5B1924] transition-all"
+              className="w-full px-3.5 py-2 sm:py-2.5 rounded-xl bg-[#FDFBF7] border border-[#E6DFD3] text-sm text-[#1C1817] placeholder-[#8C8379] focus:outline-none focus:border-[#5B1924] focus:ring-1 focus:ring-[#5B1924] transition-all disabled:opacity-60"
             />
           </div>
 
@@ -203,54 +266,61 @@ export const AuthPanel: React.FC<AuthPanelProps> = ({
               id="auth-password"
               type="password"
               required
+              disabled={isLoading}
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                if (errorMessage) setErrorMessage(null);
+              }}
               placeholder="••••••••"
-              className="w-full px-3.5 py-2 sm:py-2.5 rounded-xl bg-[#FDFBF7] border border-[#E6DFD3] text-sm text-[#1C1817] placeholder-[#8C8379] focus:outline-none focus:border-[#5B1924] focus:ring-1 focus:ring-[#5B1924] transition-all"
+              className="w-full px-3.5 py-2 sm:py-2.5 rounded-xl bg-[#FDFBF7] border border-[#E6DFD3] text-sm text-[#1C1817] placeholder-[#8C8379] focus:outline-none focus:border-[#5B1924] focus:ring-1 focus:ring-[#5B1924] transition-all disabled:opacity-60"
             />
           </div>
 
           {/* Primary Submit CTA */}
           <button
             type="submit"
-            className="w-full mt-1.5 inline-flex items-center justify-center gap-2 px-5 py-2.5 sm:py-3 rounded-full bg-[#5B1924] text-[#FDFBF7] text-sm font-medium hover:bg-[#48131C] active:scale-[0.98] transition-all shadow-md cursor-pointer group"
+            disabled={isLoading}
+            className="w-full mt-1.5 inline-flex items-center justify-center gap-2 px-5 py-2.5 sm:py-3 rounded-full bg-[#5B1924] text-[#FDFBF7] text-sm font-medium hover:bg-[#48131C] active:scale-[0.98] disabled:opacity-75 disabled:cursor-not-allowed transition-all shadow-md cursor-pointer group"
           >
-            <span>{tab === 'Login' ? 'Login' : 'Create Account'}</span>
-            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            {isLoading ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                <span>{tab === 'Login' ? 'Signing in...' : 'Creating account...'}</span>
+              </>
+            ) : (
+              <>
+                <span>{tab === 'Login' ? 'Login' : 'Create Account'}</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </>
+            )}
           </button>
         </form>
 
-        {/* Disclosed Auth Status Notification */}
-        {submittedStatus ? (
-          <div className="mt-3.5 p-3 rounded-xl bg-[#F2ECE1] border border-[#E6DFD3] text-xs space-y-2">
-            <div className="flex items-start gap-2 text-[#5B1924]">
-              <ShieldAlert className="w-4 h-4 shrink-0 mt-0.5" />
-              <p className="font-medium text-[#1C1817]">{submittedStatus}</p>
-            </div>
-            {onOpenApp && (
-              <button
-                type="button"
-                onClick={onOpenApp}
-                className="w-full py-2 px-3 rounded-lg bg-[#5B1924] text-[#FDFBF7] text-xs font-medium hover:bg-[#48131C] transition-colors cursor-pointer text-center block"
-              >
-                Launch App Preview Demo
-              </button>
-            )}
+        {/* Session Security Indicator & Demo Shortcut */}
+        <div className="mt-3.5 pt-2.5 border-t border-[#E6DFD3] flex flex-col items-center gap-1.5 text-center">
+          <div className="flex items-center justify-center gap-1.5 text-[11px] text-[#8C8379]">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-600/70" />
+            <span>Secure session via HTTP-only cookie</span>
           </div>
-        ) : (
-          <div className="mt-3.5 pt-2.5 border-t border-[#E6DFD3] flex items-center justify-center gap-1.5 text-[11px] text-[#8C8379]">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#8C8379]/50" />
-            <span>Authentication backend is not connected (UI Preview)</span>
-          </div>
-        )}
+          {onOpenApp && (
+            <button
+              type="button"
+              onClick={onOpenApp}
+              className="text-[11px] text-[#8C8379] hover:text-[#5B1924] underline underline-offset-2 transition-colors cursor-pointer"
+            >
+              Or preview dashboard as guest
+            </button>
+          )}
+        </div>
 
         {/* Bottom Switch Link & Return Link */}
-        <div className="mt-3.5 pt-2.5 border-t border-[#E6DFD3]/70 flex flex-col items-center gap-1.5 text-xs">
+        <div className="mt-3 pt-2.5 border-t border-[#E6DFD3]/70 flex flex-col items-center gap-1.5 text-xs">
           <button
             type="button"
             onClick={() => {
               setTab(tab === 'Login' ? 'Sign Up' : 'Login');
-              setSubmittedStatus(null);
+              setErrorMessage(null);
             }}
             className="text-[#5E564E] hover:text-[#5B1924] transition-colors cursor-pointer"
           >

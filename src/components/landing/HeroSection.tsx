@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ArrowRight, Sparkles } from 'lucide-react';
-import { AuthPanel } from './AuthPanel';
+import { AuthPanel, AuthUser } from './AuthPanel';
 
 interface HeroSectionProps {
   onOpenApp: () => void;
@@ -8,6 +8,7 @@ interface HeroSectionProps {
   scrollProgress?: number;
   authProgress?: number;
   onCloseAuth?: () => void;
+  onAuthSuccess?: (user: AuthUser) => void;
 }
 
 export const HeroSection: React.FC<HeroSectionProps> = ({
@@ -15,7 +16,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   onGetStarted,
   scrollProgress: externalProgress,
   authProgress = 0,
-  onCloseAuth
+  onCloseAuth,
+  onAuthSuccess,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [internalProgress, setInternalProgress] = useState(0);
@@ -181,6 +183,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                   authProgress={authProgress}
                   onClose={onCloseAuth}
                   onOpenApp={onOpenApp}
+                  onAuthSuccess={onAuthSuccess}
                   prefersReducedMotion={prefersReducedMotion}
                 />
               )}
@@ -199,6 +202,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 authProgress={authProgress}
                 onClose={onCloseAuth}
                 onOpenApp={onOpenApp}
+                onAuthSuccess={onAuthSuccess}
                 prefersReducedMotion={prefersReducedMotion}
                 isMobile
               />

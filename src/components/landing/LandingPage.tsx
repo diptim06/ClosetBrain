@@ -8,9 +8,11 @@ import { WhySection } from './WhySection';
 import { HowItWorksSection } from './HowItWorksSection';
 import { FinalCtaSection } from './FinalCtaSection';
 import { LandingFooter } from './LandingFooter';
+import { AuthUser } from './AuthPanel';
 
 interface LandingPageProps {
   onOpenApp: () => void;
+  onAuthSuccess?: (user: AuthUser) => void;
 }
 
 type TransitionState =
@@ -20,7 +22,7 @@ type TransitionState =
   | 'auth'
   | 'transitioning_to_landing';
 
-export const LandingPage: React.FC<LandingPageProps> = ({ onOpenApp }) => {
+export const LandingPage: React.FC<LandingPageProps> = ({ onOpenApp, onAuthSuccess }) => {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 
@@ -272,6 +274,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onOpenApp }) => {
           scrollProgress={scrollProgress}
           authProgress={authProgress}
           onCloseAuth={handleCloseAuth}
+          onAuthSuccess={onAuthSuccess}
         />
 
         {/* 3. In-Closet Content World: full-width backgrounds, cleanly contained inside frame */}

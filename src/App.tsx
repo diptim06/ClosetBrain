@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { LandingPage } from './components/landing/LandingPage';
+import { AuthUser } from './components/landing/AuthPanel';
 import { Sidebar, NavTab } from './components/Sidebar';
 import { Header } from './components/Header';
 import { TodayOutfit } from './components/TodayOutfit';
@@ -18,6 +19,7 @@ import {
 } from './components/SecondaryViews';
 import {
   MOCK_USER,
+  UserProfile,
   MOCK_TODAY_OUTFIT,
   MOCK_CATEGORIES,
   MOCK_QUICK_ACTIONS,
@@ -30,6 +32,53 @@ import { ArrowLeft } from 'lucide-react';
 export const App: React.FC = () => {
   // Mode state: 'landing' by default for the first landing page version of ClosetBrain
   const [mode, setMode] = useState<'landing' | 'app'>('landing');
+  const [user, setUser] = useState<AuthUser | null>(null);
+
+  // Restore authenticated session from MongoDB Atlas cookie on startup
+  useEffect(() => {
+    let isMounted = true;
+    const restoreSession = async () => {
+      try {
+        const res = await fetch('/api/auth/me', {
+          credentials: 'include',
+        });
+        if (res.ok) {
+          const data = await res.json();
+          if (isMounted && data.user) {
+            setUser(data.user);
+            setMode('app');
+          }
+        }
+      } catch (err) {
+        // Silent catch for initial unauthenticated/offline state
+      }
+    };
+    restoreSession();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  // Handle successful login or signup from AuthPanel
+  const handleAuthSuccess = (authenticatedUser: AuthUser) => {
+    setUser(authenticatedUser);
+    setMode('app');
+  };
+
+  // Handle real server logout and cookie destruction
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/auth/logout', {
+        method: 'POST',
+        credentials: 'include',
+      });
+    } catch (err) {
+      console.error('Logout request error:', err);
+    } finally {
+      setUser(null);
+      setMode('landing');
+    }
+  };
 
   // Read collapsed state from localStorage if available
   const [collapsed, setCollapsed] = useState<boolean>(() => {
@@ -48,8 +97,23 @@ export const App: React.FC = () => {
     setCollapsed((prev) => !prev);
   };
 
+  // Format active profile for UI components (using real authenticated profile or preview fallback)
+  const displayUserProfile: UserProfile = user
+    ? {
+        name: user.name,
+        email: user.email,
+        avatar: MOCK_USER.avatar,
+        location: MOCK_USER.location,
+      }
+    : MOCK_USER;
+
   if (mode === 'landing') {
-    return <LandingPage onOpenApp={() => setMode('app')} />;
+    return (
+      <LandingPage
+        onOpenApp={() => setMode('app')}
+        onAuthSuccess={handleAuthSuccess}
+      />
+    );
   }
 
   return (
@@ -60,31 +124,51 @@ export const App: React.FC = () => {
         onToggleCollapse={handleToggleCollapse}
         activeTab={activeTab}
         onSelectTab={(tab) => setActiveTab(tab)}
-        user={MOCK_USER}
+        user={displayUserProfile}
         mobileOpen={mobileMenuOpen}
         onCloseMobile={() => setMobileMenuOpen(false)}
       />
 
       {/* Main Content Area - Resizes dynamically with sidebar on desktop */}
       <div
-        className={`flex-1 flex flex-col transition-all duration-300 min-w-0 ${collapsed ? 'md:ml-16' : 'md:ml-60'
-          }`}
+        className={`flex-1 flex flex-col transition-all duration-300 min-w-0 ${
+          collapsed ? 'md:ml-16' : 'md:ml-60'
+        }`}
       >
         {/* Navigation Banner back to Landing Page */}
         <div className="bg-[#F2ECE1] border-b border-[#E6DFD3] px-6 py-2.5 flex items-center justify-between text-xs text-[#5E564E]">
-          <span className="font-medium text-[#5B1924]">ClosetBrain Live App Preview</span>
-          <button
-            onClick={() => setMode('landing')}
-            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#5B1924] text-[#FDFBF7] text-xs font-medium hover:bg-[#48131C] transition-all cursor-pointer"
-          >
-            <ArrowLeft className="w-3.5 h-3.5" />
-            <span>Back to Landing Page</span>
-          </button>
+          <div className="flex items-center gap-2">
+            <span className="font-semibold text-[#5B1924]">
+              {user ? `Logged in as ${user.name}` : 'ClosetBrain Live App Preview'}
+            </span>
+            {user && (
+              <span className="text-[#8C8379] hidden sm:inline">({user.email})</span>
+            )}
+          </div>
+          <div className="flex items-center gap-2.5">
+            {user && (
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#E6DFD3] text-[#1C1817] hover:bg-[#DCD4C6] transition-all cursor-pointer font-medium"
+              >
+                <span>Log Out</span>
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={() => setMode('landing')}
+              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#5B1924] text-[#FDFBF7] text-xs font-medium hover:bg-[#48131C] transition-all cursor-pointer"
+            >
+              <ArrowLeft className="w-3.5 h-3.5" />
+              <span>Back to Landing Page</span>
+            </button>
+          </div>
         </div>
 
         {/* Top Header */}
         <Header
-          user={MOCK_USER}
+          user={displayUserProfile}
           onOpenMobileMenu={() => setMobileMenuOpen(true)}
         />
 
