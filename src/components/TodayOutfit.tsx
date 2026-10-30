@@ -98,7 +98,7 @@ export const TodayOutfit: React.FC<TodayOutfitProps> = ({ data }) => {
               <Sparkles size={14} /> Daily AI Pick
             </div>
             <h3 className="text-xl font-bold font-editorial text-[#23201D] mb-4">
-              Today's Recommended Look
+              Today's Recommended <span className="font-cursive text-[1.25em] text-[#5B1924] font-normal leading-none inline-block px-1 align-baseline">Look</span>
             </h3>
 
             <div className="aspect-[16/9] rounded-lg overflow-hidden mb-4 border border-[#ECE7DE]">

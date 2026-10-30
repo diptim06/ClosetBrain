@@ -31,7 +31,9 @@ export const ClosetView: React.FC<ViewProps> = ({ categories }) => {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold font-editorial text-[#23201D]">My Closet</h2>
+          <h2 className="text-2xl font-bold font-editorial text-[#23201D]">
+            My <span className="font-cursive text-[1.25em] text-[#5B1924] font-normal leading-none inline-block px-1 align-baseline">Closet</span>
+          </h2>
           <p className="text-xs text-[#78716C]">100 garments cataloged across 4 categories</p>
         </div>
         <button className="py-2 px-4 bg-[#A65D47] text-white text-xs font-semibold rounded-lg hover:bg-[#964B36] transition-colors flex items-center gap-1.5 cursor-pointer border-0">
@@ -47,8 +49,8 @@ export const ClosetView: React.FC<ViewProps> = ({ categories }) => {
               key={cat}
               onClick={() => setSelectedCat(cat)}
               className={`px-3 py-1.5 rounded-lg transition-colors cursor-pointer border-0 ${selectedCat === cat
-                  ? 'bg-[#A65D47] text-white font-bold'
-                  : 'bg-[#FBF9F5] text-[#78716C] hover:text-[#23201D]'
+                ? 'bg-[#A65D47] text-white font-bold'
+                : 'bg-[#FBF9F5] text-[#78716C] hover:text-[#23201D]'
                 }`}
             >
               {cat}
@@ -89,7 +91,9 @@ export const OutfitsView: React.FC<ViewProps> = ({ recentOutfits }) => (
   <div className="space-y-6">
     <div className="flex items-center justify-between">
       <div>
-        <h2 className="text-2xl font-bold font-editorial text-[#23201D]">Outfit Collections</h2>
+        <h2 className="text-2xl font-bold font-editorial text-[#23201D]">
+          Outfit <span className="font-cursive text-[1.25em] text-[#5B1924] font-normal leading-none inline-block px-1 align-baseline">Collections</span>
+        </h2>
         <p className="text-xs text-[#78716C]">34 curated outfit formulas</p>
       </div>
       <button className="py-2 px-4 bg-[#A65D47] text-white text-xs font-semibold rounded-lg hover:bg-[#964B36] transition-colors flex items-center gap-1.5 cursor-pointer border-0">
@@ -125,7 +129,9 @@ export const CalendarView: React.FC = () => (
     <div className="w-12 h-12 rounded-full bg-[#F5EFE6] text-[#A65D47] flex items-center justify-center mx-auto">
       <Calendar size={24} />
     </div>
-    <h2 className="text-xl font-bold font-editorial text-[#23201D]">Outfit Calendar Planner</h2>
+    <h2 className="text-xl font-bold font-editorial text-[#23201D]">
+      Outfit Calendar <span className="font-cursive text-[1.25em] text-[#5B1924] font-normal leading-none inline-block px-1 align-baseline">Planner</span>
+    </h2>
     <p className="text-xs text-[#78716C] max-w-md mx-auto">
       Schedule daily looks in advance based on forecasted weather telemetry and upcoming calendar obligations.
     </p>
@@ -137,7 +143,9 @@ export const CalendarView: React.FC = () => (
 
 export const FavoritesView: React.FC = () => (
   <div className="space-y-4">
-    <h2 className="text-2xl font-bold font-editorial text-[#23201D]">Favorite Outfits</h2>
+    <h2 className="text-2xl font-bold font-editorial text-[#23201D]">
+      Favorite <span className="font-cursive text-[1.25em] text-[#5B1924] font-normal leading-none inline-block px-1 align-baseline">Outfits</span>
+    </h2>
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
       <div className="cb-card p-4 flex gap-4 items-center">
         <img src="/assets/outfit_today.jpg" className="w-20 h-20 rounded-lg object-cover border border-[#ECE7DE]" />
@@ -158,7 +166,9 @@ export const StylistView: React.FC = () => (
         <Sparkles size={20} />
       </div>
       <div>
-        <h2 className="text-xl font-bold font-editorial text-[#23201D]">AI Personal Stylist Assistant</h2>
+        <h2 className="text-xl font-bold font-editorial text-[#23201D]">
+          AI Personal Stylist <span className="font-cursive text-[1.25em] text-[#5B1924] font-normal leading-none inline-block px-1 align-baseline">Assistant</span>
+        </h2>
         <p className="text-xs text-[#78716C]">Contextual intelligence engine</p>
       </div>
     </div>
@@ -174,7 +184,9 @@ export const StylistView: React.FC = () => (
 
 export const SettingsView: React.FC = () => (
   <div className="cb-card p-6 space-y-6 max-w-xl">
-    <h2 className="text-xl font-bold font-editorial text-[#23201D]">Account Settings</h2>
+    <h2 className="text-xl font-bold font-editorial text-[#23201D]">
+      Account <span className="font-cursive text-[1.25em] text-[#5B1924] font-normal leading-none inline-block px-1 align-baseline">Settings</span>
+    </h2>
     <div className="space-y-4 text-xs text-[#23201D]">
       <div>
         <label className="block text-[#78716C] mb-1">User Name:</label>

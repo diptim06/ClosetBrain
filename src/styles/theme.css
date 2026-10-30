@@ -1,0 +1,239 @@
+/**
+ * ClosetBrain Centralized Design System Tokens
+ * Source of truth for palette, typography, surfaces, borders, shadows, and transitions.
+ * Inspired by luxury fashion-editorial publications.
+ */
+
+:root {
+  /* --- Primary Brand & Accent Palette --- */
+  --cb-burgundy: #5B1924;
+  --cb-burgundy-hover: #48131C;
+  --cb-burgundy-active: #370C13;
+  --cb-burgundy-subtle: rgba(91, 25, 36, 0.05);
+  --cb-burgundy-tint: rgba(91, 25, 36, 0.12);
+  --cb-burgundy-border: rgba(91, 25, 36, 0.22);
+
+  /* --- Restrained Dusty Rose Fashion Highlights --- */
+  --cb-rose: #B76E79;
+  --cb-rose-soft: #C99DA7;
+  --cb-rose-subtle: rgba(183, 110, 121, 0.08);
+  --cb-rose-tint: rgba(183, 110, 121, 0.15);
+  --cb-rose-border: rgba(183, 110, 121, 0.25);
+
+  /* --- Page Backgrounds & Editorial Surfaces --- */
+  --cb-bg-page: #FBF9F5;         /* Warm Ivory Main Canvas */
+  --cb-bg-soft: #FAF6EE;         /* Soft warm ivory wash */
+  --cb-bg-surface: #FFFFFF;      /* Clean luminous card container */
+  --cb-bg-elevated: #F5EFE6;     /* Subtle Mocha Cream surface */
+  --cb-bg-muted: #F8F4EC;        /* Very subtle warm wash */
+  --cb-bg-subtle: #ECE7DE;       /* Muted neutral divider surface */
+  --cb-bg-contrast: #1C1817;     /* Dark espresso background for inverse elements */
+
+  /* --- Typography Colors --- */
+  --cb-text-primary: #1C1817;    /* Deep espresso primary text */
+  --cb-text-secondary: #5E564E;  /* Warm slate / dark taupe secondary text */
+  --cb-text-muted: #8C8379;      /* Stone grey muted metadata */
+  --cb-text-subtle: #A8A095;     /* Ghost text / placeholders */
+  --cb-text-inverse: #FDFBF7;    /* Ivory text on dark/burgundy backgrounds */
+  --cb-text-burgundy: #5B1924;   /* Brand emphasis text */
+  --cb-text-rose: #9A5360;       /* Dusty rose text accent */
+
+  /* --- Borders & Dividers --- */
+  --cb-border-subtle: #ECE5DA;   /* Delicate warm beige border */
+  --cb-border-card: #E5DDD0;     /* Standard card perimeter */
+  --cb-border-divider: #F2ECE1;  /* Interior hair-line divider */
+  --cb-border-strong: #D8CEBD;   /* Emphasized border on hover */
+  --cb-border-focus: #5B1924;    /* Focus outline color */
+
+  /* --- Typography Families --- */
+  --cb-font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --cb-font-editorial: 'DM Sans', system-ui, -apple-system, sans-serif;
+  --cb-font-cursive: 'Italianno', cursive;
+
+  /* --- Border Radii --- */
+  --cb-radius-xs: 0.25rem;       /* 4px */
+  --cb-radius-sm: 0.375rem;      /* 6px */
+  --cb-radius-md: 0.5rem;        /* 8px */
+  --cb-radius-lg: 0.75rem;       /* 12px */
+  --cb-radius-xl: 1rem;          /* 16px */
+  --cb-radius-2xl: 1.5rem;       /* 24px */
+  --cb-radius-3xl: 2rem;         /* 32px */
+  --cb-radius-full: 9999px;      /* Pill buttons */
+
+  /* --- Subtle Luxury Shadows --- */
+  --cb-shadow-sm: 0 1px 3px rgba(28, 24, 23, 0.03);
+  --cb-shadow-card: 0 4px 20px -4px rgba(28, 24, 23, 0.04), 0 1px 3px rgba(28, 24, 23, 0.02);
+  --cb-shadow-hover: 0 12px 32px -8px rgba(91, 25, 36, 0.08), 0 2px 8px rgba(28, 24, 23, 0.03);
+  --cb-shadow-modal: 0 24px 64px -12px rgba(28, 24, 23, 0.16), 0 8px 24px -4px rgba(91, 25, 36, 0.08);
+
+  /* --- Transitions --- */
+  --cb-transition-fast: 150ms cubic-bezier(0.16, 1, 0.3, 1);
+  --cb-transition-base: 240ms cubic-bezier(0.16, 1, 0.3, 1);
+  --cb-transition-smooth: 380ms cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Backward Compatibility Tokens (preserves landing page definitions) */
+  --cosmic-latte: var(--cb-bg-page);
+  --cosmic-latte-soft: var(--cb-bg-soft);
+  --mocha-cream: #F2ECE1;
+  --mocha-cream-deep: #E8E0CE;
+  --mocha-cream-light: var(--cb-bg-muted);
+  --deep-burgundy: var(--cb-burgundy);
+  --deep-burgundy-hover: var(--cb-burgundy-hover);
+  --deep-burgundy-light: var(--cb-burgundy-subtle);
+  --deep-burgundy-border: var(--cb-burgundy-border);
+  --text-primary: var(--cb-text-primary);
+  --text-secondary: var(--cb-text-secondary);
+  --text-muted: var(--cb-text-muted);
+  --border-warm: var(--cb-border-subtle);
+  --border-hover: var(--cb-border-strong);
+  --font-sans: var(--cb-font-sans);
+  --font-serif: var(--cb-font-editorial);
+  --font-heading: var(--cb-font-editorial);
+  --font-cursive: var(--cb-font-cursive);
+}
+
+/* Luxury Editorial Utility Classes */
+.bg-cb-page { background-color: var(--cb-bg-page); }
+.bg-cb-surface { background-color: var(--cb-bg-surface); }
+.bg-cb-elevated { background-color: var(--cb-bg-elevated); }
+.bg-cb-muted { background-color: var(--cb-bg-muted); }
+.bg-cb-burgundy { background-color: var(--cb-burgundy); }
+.bg-cb-burgundy-subtle { background-color: var(--cb-burgundy-subtle); }
+.bg-cb-rose-subtle { background-color: var(--cb-rose-subtle); }
+.bg-cb-rose-tint { background-color: var(--cb-rose-tint); }
+
+.text-cb-primary { color: var(--cb-text-primary); }
+.text-cb-secondary { color: var(--cb-text-secondary); }
+.text-cb-muted { color: var(--cb-text-muted); }
+.text-cb-burgundy { color: var(--cb-burgundy); }
+.text-cb-rose { color: var(--cb-text-rose); }
+.text-cb-inverse { color: var(--cb-text-inverse); }
+
+.border-cb-subtle { border-color: var(--cb-border-subtle); }
+.border-cb-card { border-color: var(--cb-border-card); }
+.border-cb-divider { border-color: var(--cb-border-divider); }
+.border-cb-burgundy { border-color: var(--cb-burgundy); }
+.border-cb-rose { border-color: var(--cb-rose-border); }
+
+.font-editorial { font-family: var(--cb-font-editorial); }
+.font-sans { font-family: var(--cb-font-sans); }
+.font-cursive {
+  font-family: var(--cb-font-cursive);
+  font-weight: 400;
+  letter-spacing: 0.01em;
+}
+
+/* Refined Fashion Editorial Card */
+.cb-card {
+  background-color: var(--cb-bg-surface);
+  border: 1px solid var(--cb-border-subtle);
+  border-radius: var(--cb-radius-2xl);
+  box-shadow: var(--cb-shadow-card);
+  transition: border-color var(--cb-transition-base), box-shadow var(--cb-transition-base), transform var(--cb-transition-base);
+}
+
+.cb-card:hover {
+  border-color: var(--cb-border-strong);
+  box-shadow: var(--cb-shadow-hover);
+}
+
+.cb-card-tint {
+  background-color: var(--cb-bg-elevated);
+  border: 1px solid var(--cb-border-subtle);
+  border-radius: var(--cb-radius-2xl);
+  box-shadow: var(--cb-shadow-card);
+  transition: border-color var(--cb-transition-base), box-shadow var(--cb-transition-base);
+}
+
+.cb-card-tint:hover {
+  border-color: var(--cb-burgundy-border);
+}
+
+/* Editorial pill badges */
+.cb-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--cb-radius-full);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  background-color: var(--cb-bg-elevated);
+  color: var(--cb-burgundy);
+  border: 1px solid var(--cb-border-subtle);
+}
+
+.cb-badge-rose {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--cb-radius-full);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  background-color: var(--cb-rose-subtle);
+  color: var(--cb-text-rose);
+  border: 1px solid var(--cb-rose-border);
+}
+
+.cb-badge-dark {
+  background-color: var(--cb-burgundy);
+  color: var(--cb-text-inverse);
+  border: 1px solid var(--cb-burgundy);
+}
+
+/* Primary burgundy button */
+.cb-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: var(--cb-burgundy);
+  color: var(--cb-text-inverse);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  border-radius: var(--cb-radius-full);
+  padding: 0.625rem 1.25rem;
+  box-shadow: var(--cb-shadow-sm);
+  transition: background-color var(--cb-transition-fast), transform var(--cb-transition-fast);
+  cursor: pointer;
+}
+
+.cb-btn-primary:hover {
+  background-color: var(--cb-burgundy-hover);
+}
+
+.cb-btn-primary:active {
+  transform: scale(0.98);
+}
+
+/* Secondary subtle button */
+.cb-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: var(--cb-bg-surface);
+  color: var(--cb-text-primary);
+  border: 1px solid var(--cb-border-subtle);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  border-radius: var(--cb-radius-full);
+  padding: 0.625rem 1.25rem;
+  box-shadow: var(--cb-shadow-sm);
+  transition: background-color var(--cb-transition-fast), border-color var(--cb-transition-fast);
+  cursor: pointer;
+}
+
+.cb-btn-secondary:hover {
+  background-color: var(--cb-bg-elevated);
+  border-color: var(--cb-border-strong);
+}
+
+.cb-btn-secondary:active {
+  transform: scale(0.98);
+}

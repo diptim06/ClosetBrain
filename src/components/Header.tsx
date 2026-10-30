@@ -39,7 +39,7 @@ export const Header: React.FC<HeaderProps> = ({ user, onOpenMobileMenu, onSearch
 
         <div>
           <h1 className="text-base sm:text-lg font-bold text-[#23201D] leading-tight">
-            Good morning, {user.name}
+            Good morning, <span className="font-cursive text-[1.28em] text-[#5B1924] font-normal leading-none inline-block px-0.5 align-baseline">{user.name}</span>
           </h1>
           <p className="text-xs text-[#78716C] hidden sm:block">
             Here's what's happening with your closet today.

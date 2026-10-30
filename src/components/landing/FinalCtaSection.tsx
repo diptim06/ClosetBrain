@@ -19,8 +19,8 @@ export const FinalCtaSection: React.FC<FinalCtaSectionProps> = ({ onOpenApp }) =
               <span>Ready for effortless style?</span>
             </div>
 
-            <h2 className="font-editorial text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-normal leading-[0.98] sm:leading-[0.95] tracking-tight text-[#FDFBF7]">
-              Elevate your wardrobe. Simplify your mornings.
+            <h2 className="font-editorial text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold leading-[0.98] sm:leading-[0.95] tracking-tight text-[#FDFBF7]">
+              Elevate your wardrobe. <span className="font-cursive text-[1.18em] text-[#FAF6EE] font-normal leading-none inline-block px-1 align-baseline">Simplify</span> your mornings.
             </h2>
 
             <p className="text-sm sm:text-base md:text-xl text-[#FDFBF7]/80 leading-relaxed max-w-xl font-light">

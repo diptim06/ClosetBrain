@@ -156,7 +156,7 @@ router.get('/me', async (req, res) => {
 
     const user = await User.findById(req.session.userId);
     if (!user) {
-      req.session.destroy(() => {});
+      req.session.destroy(() => { });
       return res.status(200).json({ user: null });
     }
 

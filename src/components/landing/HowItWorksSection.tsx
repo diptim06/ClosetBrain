@@ -42,8 +42,8 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({ onOpenApp 
             <span className="text-xs font-semibold tracking-widest uppercase text-[#5B1924] mb-2 block">
               04 — Workflow
             </span>
-            <h2 className="font-editorial text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-normal text-[#1C1817]">
-              How it works
+            <h2 className="font-editorial text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight text-[#1C1817]">
+              How it <span className="font-cursive text-[1.25em] text-[#5B1924] font-normal leading-none inline-block px-1 align-baseline">works</span>
             </h2>
           </div>
           <p className="text-sm sm:text-base text-[#5E564E] max-w-md mt-3 md:mt-0 leading-relaxed">

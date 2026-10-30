@@ -11,8 +11,9 @@ import { LandingFooter } from './LandingFooter';
 import { AuthUser } from './AuthPanel';
 
 interface LandingPageProps {
-  onOpenApp: () => void;
+  onOpenApp?: () => void;
   onAuthSuccess?: (user: AuthUser) => void;
+  initialOpenAuth?: boolean;
 }
 
 type TransitionState =
@@ -22,7 +23,11 @@ type TransitionState =
   | 'auth'
   | 'transitioning_to_landing';
 
-export const LandingPage: React.FC<LandingPageProps> = ({ onOpenApp, onAuthSuccess }) => {
+export const LandingPage: React.FC<LandingPageProps> = ({
+  onOpenApp,
+  onAuthSuccess,
+  initialOpenAuth = false,
+}) => {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 
@@ -104,6 +109,17 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onOpenApp, onAuthSucce
 
     animationFrameRef.current = requestAnimationFrame(step);
   }, [prefersReducedMotion]);
+
+  // Automatically open auth transition if redirected from protected dashboard route
+  useEffect(() => {
+    if (initialOpenAuth) {
+      window.scrollTo(0, 0);
+      const timer = setTimeout(() => {
+        startAuthTransition();
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [initialOpenAuth, startAuthTransition]);
 
   // Reverse transition back to landing page
   const runReverseTransition = useCallback(() => {

@@ -26,6 +26,15 @@ app.use(
   })
 );
 
+import dns from 'dns';
+
+// Ensure reliable SRV resolution across local Wi-Fi router networks
+try {
+  dns.setServers(['8.8.8.8', '1.1.1.1']);
+} catch {
+  // Fall back to system resolver
+}
+
 // MongoDB Connection
 const mongoUri = process.env.MONGODB_URI;
 const hasRealMongoUri =
@@ -34,15 +43,41 @@ const hasRealMongoUri =
   !mongoUri.includes('<password>') &&
   !mongoUri.includes('<cluster-name>');
 
+let clientPromise = null;
 if (hasRealMongoUri) {
-  mongoose
-    .connect(mongoUri)
-    .then(() => {
-      console.log('✓ Successfully connected to MongoDB Atlas');
-    })
-    .catch((err) => {
-      console.error('✗ MongoDB Atlas connection error:', err.message);
-    });
+  const connectWithRetry = () => {
+    if (mongoose.connection.readyState === 1 || mongoose.connection.readyState === 2) {
+      return;
+    }
+    mongoose
+      .connect(mongoUri, {
+        serverSelectionTimeoutMS: 5000,
+      })
+      .then(() => {
+        console.log('✓ Successfully connected to MongoDB Atlas');
+      })
+      .catch((err) => {
+        console.warn('✗ MongoDB Atlas connection warning:', err.message);
+        setTimeout(connectWithRetry, 5000);
+      });
+  };
+
+  connectWithRetry();
+
+  mongoose.connection.on('disconnected', () => {
+    console.warn('! MongoDB connection lost. Attempting reconnection...');
+    setTimeout(connectWithRetry, 5000);
+  });
+
+  clientPromise = new Promise((resolve) => {
+    if (mongoose.connection.readyState === 1) {
+      resolve(mongoose.connection.getClient());
+    } else {
+      mongoose.connection.once('open', () => {
+        resolve(mongoose.connection.getClient());
+      });
+    }
+  });
 } else {
   console.warn(
     '! Notice: MONGODB_URI in .env contains placeholders. Please update .env with your MongoDB Atlas connection string.'
@@ -51,13 +86,16 @@ if (hasRealMongoUri) {
 
 // Session store setup: use MongoStore if valid URI provided, fallback gracefully to MemoryStore for dev inspection if needed
 let sessionStore;
-if (hasRealMongoUri) {
+if (hasRealMongoUri && clientPromise) {
   sessionStore = MongoStore.create({
-    mongoUrl: mongoUri,
+    clientPromise,
     collectionName: 'sessions',
     ttl: 14 * 24 * 60 * 60, // 14 days
     autoRemove: 'native',
     touchAfter: 24 * 3600, // Update session once in 24 hours if data unchanged
+  });
+  sessionStore.on('error', (err) => {
+    console.warn('Session store warning:', err.message);
   });
 }
 
@@ -92,8 +130,20 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`ClosetBrain Express backend running on http://localhost:${PORT}`);
 });
+
+server.on('error', (err) => {
+  if (err.code === 'EADDRINUSE') {
+    console.error(`✗ Port ${PORT} is already in use by another process.`);
+    process.exit(1);
+  } else {
+    console.error('Server error:', err);
+  }
+});
+
+// Keepalive interval so server never exits on idle Atlas timeouts
+setInterval(() => {}, 60000);
 
 export default app;

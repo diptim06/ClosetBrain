@@ -34,8 +34,8 @@ export const WhySection: React.FC = () => {
             <span className="text-xs font-semibold tracking-widest uppercase text-[#5B1924] mb-2 block">
               03 — Benefits
             </span>
-            <h2 className="font-editorial text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-normal text-[#1C1817]">
-              Why use ClosetBrain?
+            <h2 className="font-editorial text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight text-[#1C1817]">
+              Why use <span className="font-cursive text-[1.22em] text-[#5B1924] font-normal leading-none inline-block px-1 align-baseline">ClosetBrain</span>?
             </h2>
           </div>
           <p className="text-sm sm:text-base text-[#5E564E] max-w-md mt-3 md:mt-0 leading-relaxed">

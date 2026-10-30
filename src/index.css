@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "./styles/theme.css";
 
 @layer base {
   :root {
@@ -20,8 +21,16 @@
     --border-warm: #E6DFD3;
     --border-hover: #D8CEBD;
 
-    --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-    --font-serif: 'Playfair Display', Georgia, serif;
+    --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-heading: 'DM Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-cursive: 'Italianno', cursive;
+
+    /* Central tokens & aliases for seamless backward compatibility */
+    --font-serif: var(--font-heading);
+    --cb-font-sans: var(--font-sans);
+    --cb-font-heading: var(--font-heading);
+    --cb-font-editorial: var(--font-heading);
+    --cb-font-cursive: var(--font-cursive);
   }
 
   body {
@@ -33,6 +42,18 @@
     selection-background-color: var(--deep-burgundy);
     selection-color: var(--cosmic-latte);
   }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    letter-spacing: -0.025em;
+  }
+}
+
+@theme {
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-heading: 'DM Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-cursive: 'Italianno', cursive;
+  --font-editorial: 'DM Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 ::selection {
@@ -43,13 +64,16 @@
 /* Hide scrollbar visually while preserving normal mouse, touch, and keyboard scrolling */
 html,
 body {
-  scrollbar-width: none; /* Firefox & standard */
-  -ms-overflow-style: none; /* IE & legacy Edge */
+  scrollbar-width: none;
+  /* Firefox & standard */
+  -ms-overflow-style: none;
+  /* IE & legacy Edge */
 }
 
 *::-webkit-scrollbar,
 ::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Edge, Opera */
+  display: none;
+  /* Chrome, Safari, Edge, Opera */
   width: 0;
   height: 0;
 }
@@ -58,28 +82,42 @@ body {
 .bg-cosmic-latte {
   background-color: var(--cosmic-latte);
 }
+
 .bg-mocha-cream {
   background-color: var(--mocha-cream);
 }
+
 .bg-mocha-cream-light {
   background-color: var(--mocha-cream-light);
 }
+
 .bg-deep-burgundy {
   background-color: var(--deep-burgundy);
 }
+
 .text-deep-burgundy {
   color: var(--deep-burgundy);
 }
+
 .border-deep-burgundy {
   border-color: var(--deep-burgundy);
 }
+
 .border-mocha-cream {
   border-color: var(--border-warm);
 }
 
-/* Editorial Typography */
+/* Typography Utility Classes: DM Sans for Headings, Italianno for Accents */
+.font-heading,
 .font-editorial {
-  font-family: 'Playfair Display', Georgia, serif;
+  font-family: var(--font-heading) !important;
+  letter-spacing: -0.025em;
+}
+
+.font-cursive {
+  font-family: var(--font-cursive) !important;
+  font-weight: 400;
+  font-style: normal;
 }
 
 /* Subtle Editorial Border Cards */

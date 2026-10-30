@@ -79,19 +79,19 @@ export const ScrollHeroSection: React.FC<ScrollHeroSectionProps> = ({ onOpenApp 
               </span>
             </div>
 
-            {/* 2. Large Stacked Wordmark: Closet / Brain */}
+            {/* 2. Large Stacked Wordmark: Closet (DM Sans) / Brain (Italianno Cursive) */}
             <div className="select-none tracking-tight leading-none space-y-0">
-              <h1 className="font-editorial text-7xl sm:text-9xl md:text-[9.5rem] lg:text-[11rem] font-normal leading-[0.82] text-[#1C1817] block">
+              <h1 className="font-editorial text-7xl sm:text-9xl md:text-[9.5rem] lg:text-[11rem] font-bold tracking-tight leading-[0.88] text-[#1C1817] block">
                 Closet
               </h1>
-              <h1 className="font-editorial italic text-7xl sm:text-9xl md:text-[9.5rem] lg:text-[11rem] font-normal leading-[0.82] text-[#5B1924] block">
+              <h1 className="font-cursive text-8xl sm:text-[10.5rem] md:text-[11rem] lg:text-[12.5rem] font-normal tracking-normal leading-[0.82] text-[#5B1924] block -mt-2 lg:-mt-4 pl-1">
                 Brain
               </h1>
             </div>
 
             {/* 3. Short Positioning Statement */}
             <p className="text-lg sm:text-xl text-[#5E564E] font-normal leading-relaxed tracking-tight max-w-xl pt-1">
-              The intelligent digital wardrobe and personal styling platform. Streamline your collection, eliminate morning decision fatigue, and curate effortless outfits from clothes you already own.
+              The intelligent digital wardrobe and personal styling platform. Streamline your collection, eliminate morning decision fatigue, and curate <span className="font-cursive text-[1.35em] text-[#5B1924] font-normal leading-none inline-block px-1 align-baseline">effortless</span> outfits from clothes you already own.
             </p>
 
             {/* 4. Primary & Secondary CTAs */}

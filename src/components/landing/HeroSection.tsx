@@ -3,7 +3,7 @@ import { ArrowRight, Sparkles } from 'lucide-react';
 import { AuthPanel, AuthUser } from './AuthPanel';
 
 interface HeroSectionProps {
-  onOpenApp: () => void;
+  onOpenApp?: () => void;
   onGetStarted?: () => void;
   scrollProgress?: number;
   authProgress?: number;
@@ -78,7 +78,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   const handleCtaClick = () => {
     if (onGetStarted) {
       onGetStarted();
-    } else {
+    } else if (onOpenApp) {
       onOpenApp();
     }
   };
@@ -124,19 +124,19 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 </span>
               </div>
 
-              {/* 2. Large Bold Wordmark: Closet / Brain - Confident editorial sizing */}
+              {/* 2. Large Bold Wordmark: Closet (DM Sans) / Brain (Italianno Cursive) */}
               <div className="select-none tracking-tight leading-none space-y-0 pt-0.5 sm:pt-0">
-                <h1 className="font-editorial text-5xl xs:text-6xl sm:text-7xl md:text-8xl lg:text-[11rem] font-normal leading-[0.84] sm:leading-[0.82] text-[#1C1817] block">
+                <h1 className="font-editorial text-5xl xs:text-6xl sm:text-7xl md:text-8xl lg:text-[11rem] font-bold tracking-tight leading-[0.88] sm:leading-[0.85] text-[#1C1817] block">
                   Closet
                 </h1>
-                <h1 className="font-editorial italic text-5xl xs:text-6xl sm:text-7xl md:text-8xl lg:text-[11rem] font-normal leading-[0.84] sm:leading-[0.82] text-[#5B1924] block">
+                <h1 className="font-cursive text-6xl xs:text-7xl sm:text-8xl md:text-9xl lg:text-[12.5rem] font-normal tracking-normal leading-[0.82] text-[#5B1924] block -mt-1 sm:-mt-2 lg:-mt-4 pl-1">
                   Brain
                 </h1>
               </div>
 
               {/* 3. Positioning Statement: Multi-line natural flow without line-clamp or shrinking */}
               <p className="text-xs xs:text-sm sm:text-base md:text-lg lg:text-2xl text-[#5E564E] font-normal leading-relaxed tracking-tight max-w-xl lg:max-w-2xl pt-0.5">
-                The intelligent digital wardrobe and personal styling platform. Streamline your collection, eliminate morning decision fatigue, and curate effortless outfits from clothes you already own.
+                The intelligent digital wardrobe and personal styling platform. Streamline your collection, eliminate morning decision fatigue, and curate <span className="font-cursive text-[1.35em] text-[#5B1924] font-normal leading-none inline-block px-1 align-baseline">effortless</span> outfits from clothes you already own.
               </p>
 
               {/* 4. Primary & Secondary CTAs: Balanced side-by-side touch targets */}
@@ -182,7 +182,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 <AuthPanel
                   authProgress={authProgress}
                   onClose={onCloseAuth}
-                  onOpenApp={onOpenApp}
                   onAuthSuccess={onAuthSuccess}
                   prefersReducedMotion={prefersReducedMotion}
                 />
@@ -201,7 +200,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               <AuthPanel
                 authProgress={authProgress}
                 onClose={onCloseAuth}
-                onOpenApp={onOpenApp}
                 onAuthSuccess={onAuthSuccess}
                 prefersReducedMotion={prefersReducedMotion}
                 isMobile
