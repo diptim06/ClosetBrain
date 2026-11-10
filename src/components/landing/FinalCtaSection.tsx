@@ -7,7 +7,7 @@ interface FinalCtaSectionProps {
 
 export const FinalCtaSection: React.FC<FinalCtaSectionProps> = ({ onOpenApp }) => {
   return (
-    <section className="py-14 sm:py-20 md:py-32 bg-[#F2ECE1] border-t border-[#E6DFD3]">
+    <section className="py-14 sm:py-20 md:py-32 bg-[#FDFBF7] border-t border-[#EAE4D9]">
       <div className="max-w-7xl mx-auto px-5 sm:px-8 md:px-14 lg:px-24">
         <div className="bg-[#5B1924] text-[#FDFBF7] rounded-2xl sm:rounded-3xl md:rounded-[2.5rem] p-6 sm:p-10 md:p-16 lg:p-20 relative overflow-hidden shadow-xl">
           {/* Subtle Background Accent Pattern */}
@@ -30,7 +30,7 @@ export const FinalCtaSection: React.FC<FinalCtaSectionProps> = ({ onOpenApp }) =
             <div className="pt-2 sm:pt-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 max-w-sm sm:max-w-none">
               <button
                 onClick={onOpenApp}
-                className="inline-flex items-center justify-center gap-2.5 sm:gap-3 px-6 py-3.5 sm:px-9 sm:py-4 rounded-full bg-[#FDFBF7] text-[#5B1924] text-sm sm:text-base font-semibold hover:bg-[#F2ECE1] active:scale-[0.98] transition-all shadow-md cursor-pointer group"
+                className="inline-flex items-center justify-center gap-2.5 sm:gap-3 px-6 py-3.5 sm:px-9 sm:py-4 rounded-full bg-white text-[#5B1924] text-sm sm:text-base font-semibold hover:bg-[#FAF7F2] active:scale-[0.98] transition-all shadow-md cursor-pointer group"
               >
                 <span>Get Started Now</span>
                 <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" />

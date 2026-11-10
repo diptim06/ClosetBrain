@@ -257,11 +257,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       ? 0
       : Math.min(1, (scrollProgress - 0.20) / 0.55);
 
-  // Smoothly blend background into WhatIsSection's Mocha Cream as portal doors open
-  const bgT = Math.max(0, Math.min(1, (scrollProgress - 0.25) / 0.50));
-  const pageBg = bgT > 0
-    ? `rgb(${Math.round(253 - 11 * bgT)}, ${Math.round(251 - 15 * bgT)}, ${Math.round(247 - 22 * bgT)})`
-    : '#FDFBF7';
+  // Keep clean warm ivory background across the page frame
+  const pageBg = '#FDFBF7';
 
   return (
     <div

@@ -1,25 +1,32 @@
 import React from 'react';
-import { Compass, TrendingUp, AlertCircle, ArrowRight, Sparkles } from 'lucide-react';
-import { StyleInsightsData } from '../../../data/mockData';
+import { Compass, Sparkles, TrendingUp, ArrowRight } from 'lucide-react';
+import { ColorDistributionItem } from '../../wardrobe/types';
 
 interface StyleInsightsProps {
-  data?: StyleInsightsData;
+  colorBreakdown?: ColorDistributionItem[];
+  topTone?: string;
+  favoriteBrands?: string[];
+  totalItems?: number;
+  isLoading?: boolean;
   onViewAllInsights?: () => void;
 }
 
 export const StyleInsights: React.FC<StyleInsightsProps> = ({
-  data = {
-    summary: 'Your rotation leans strongly toward warm minimalist neutrals and structured tailoring.',
-    topTone: 'Earth & Warm Ivory',
-    colorBreakdown: [
-      { label: 'Neutrals', percentage: 60, color: '#D8C7B5' },
-      { label: 'Earth Tones', percentage: 25, color: '#B76E79' },
-      { label: 'Monochrome', percentage: 15, color: '#4B4B52' },
-    ],
-    favoriteBrands: ['The Row', 'Lemaire', 'Acne Studios', 'Toteme'],
-  },
+  colorBreakdown = [],
+  topTone = 'None',
+  favoriteBrands = [],
+  totalItems = 0,
+  isLoading = false,
   onViewAllInsights,
 }) => {
+  const hasItems = totalItems > 0 && colorBreakdown.length > 0;
+
+  const narrativeSummary = hasItems
+    ? `Your capsule leans toward ${topTone.toLowerCase()} tones with ${colorBreakdown.length} distinct colour ${
+        colorBreakdown.length === 1 ? 'family' : 'families'
+      } cataloged across your wardrobe.`
+    : 'Your palette and brand analytics will generate dynamically here as you catalog garments into your digital wardrobe.';
+
   return (
     <div className="bg-[#FFFFFF] border border-[#E8E0D5] rounded-3xl p-6 sm:p-7 shadow-sm flex flex-col justify-between h-full">
       {/* Header */}
@@ -32,7 +39,7 @@ export const StyleInsights: React.FC<StyleInsightsProps> = ({
                 <span>Wardrobe Intelligence</span>
               </span>
               <span className="text-[10px] uppercase font-bold tracking-wider text-[#9A5360] bg-[#B76E79]/10 border border-[#B76E79]/20 px-2.5 py-0.5 rounded-full">
-                Rotation Analysis
+                Palette Analysis
               </span>
             </div>
 
@@ -47,7 +54,7 @@ export const StyleInsights: React.FC<StyleInsightsProps> = ({
 
         {/* Narrative Summary */}
         <p className="text-xs text-[#5E564E] leading-relaxed mb-4">
-          {data.summary}
+          {narrativeSummary}
         </p>
 
         {/* Color Palette Distribution Bar */}
@@ -55,66 +62,78 @@ export const StyleInsights: React.FC<StyleInsightsProps> = ({
           <div className="flex items-center justify-between text-xs">
             <span className="font-semibold text-[#1C1817]">Palette Allocation</span>
             <span className="text-[11px] text-[#5B1924] font-medium">
-              Dominant: {data.topTone}
+              Dominant: {hasItems ? topTone : 'Awaiting data'}
             </span>
           </div>
 
-          <div className="h-2 w-full rounded-full overflow-hidden flex bg-[#ECE5DA]">
-            {data.colorBreakdown.map((item, idx) => (
-              <div
-                key={idx}
-                style={{
-                  width: `${item.percentage}%`,
-                  backgroundColor: item.color,
-                }}
-                title={`${item.label}: ${item.percentage}%`}
-                className="h-full transition-all"
-              />
-            ))}
-          </div>
+          {hasItems ? (
+            <>
+              <div className="h-2 w-full rounded-full overflow-hidden flex bg-[#ECE5DA]">
+                {colorBreakdown.map((item, idx) => (
+                  <div
+                    key={idx}
+                    style={{
+                      width: `${item.percentage}%`,
+                      backgroundColor: item.color,
+                    }}
+                    title={`${item.label}: ${item.percentage}% (${item.count} items)`}
+                    className="h-full transition-all"
+                  />
+                ))}
+              </div>
 
-          <div className="flex items-center justify-between text-[11px] text-[#5E564E] pt-1">
-            {data.colorBreakdown.map((item, idx) => (
-              <span key={idx} className="flex items-center gap-1.5">
-                <span
-                  className="w-2 h-2 rounded-full border border-black/10 shrink-0"
-                  style={{ backgroundColor: item.color }}
-                />
-                <span>
-                  {item.label} ({item.percentage}%)
-                </span>
+              <div className="flex flex-wrap items-center gap-3 text-[11px] text-[#5E564E] pt-1">
+                {colorBreakdown.map((item, idx) => (
+                  <span key={idx} className="flex items-center gap-1.5">
+                    <span
+                      className="w-2 h-2 rounded-full border border-black/10 shrink-0"
+                      style={{ backgroundColor: item.color }}
+                    />
+                    <span>
+                      {item.label} ({item.percentage}%)
+                    </span>
+                  </span>
+                ))}
+              </div>
+            </>
+          ) : (
+            <div className="p-3 rounded-xl bg-[#FAF6EE] border border-[#ECE5DA] text-center">
+              <span className="text-xs text-[#8C8379]">
+                No colour palette data recorded yet. Add garments to generate palette distribution.
               </span>
-            ))}
-          </div>
+            </div>
+          )}
         </div>
 
-        {/* Meaningful Wardrobe Highlights with Dusty Rose and Burgundy accents */}
+        {/* Wardrobe Foundation & Wear Tracking Intelligence */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
-          {/* Most Worn Staple */}
+          {/* Foundation Metrics */}
           <div className="p-3.5 rounded-2xl bg-[#FCFAF7] border-l-2 border-l-[#5B1924] border-y border-r border-[#ECE5DA]">
             <div className="flex items-center gap-1.5 text-[10px] uppercase font-bold text-[#5B1924] tracking-wider mb-1">
-              <TrendingUp size={12} />
-              <span>Signature Staple</span>
+              <Sparkles size={12} />
+              <span>Capsule Foundation</span>
             </div>
             <div className="text-xs font-bold text-[#1C1817] leading-tight">
-              Cashmere Knit Sweater
+              {totalItems} Cataloged {totalItems === 1 ? 'Piece' : 'Pieces'}
             </div>
             <p className="text-[11px] text-[#5E564E] mt-1 leading-snug">
-              Worn 14 times this season. Highly versatile anchor piece.
+              {hasItems
+                ? `Structured across ${colorBreakdown.length} palette families for versatile layering.`
+                : 'Catalog your foundational pieces to unlock automatic style pairing.'}
             </p>
           </div>
 
-          {/* Underused Gem */}
+          {/* Honest Upcoming Feature State */}
           <div className="p-3.5 rounded-2xl bg-[#FCFAF7] border-l-2 border-l-[#B76E79] border-y border-r border-[#ECE5DA]">
             <div className="flex items-center gap-1.5 text-[10px] uppercase font-bold text-[#9A5360] tracking-wider mb-1">
-              <AlertCircle size={12} />
-              <span>Underutilized Piece</span>
+              <TrendingUp size={12} />
+              <span>Wear Intelligence</span>
             </div>
             <div className="text-xs font-bold text-[#1C1817] leading-tight">
-              Silk Georgette Blouse
+              Rotation Tracking
             </div>
             <p className="text-[11px] text-[#5E564E] mt-1 leading-snug">
-              Unworn for 38 days. AI suggests pairing with tailored trousers.
+              Wear frequency and staple utilization will activate as looks are styled in Outfit Studio.
             </p>
           </div>
         </div>
@@ -124,16 +143,22 @@ export const StyleInsights: React.FC<StyleInsightsProps> = ({
           <div className="text-[10px] uppercase font-bold tracking-wider text-[#8C8379] mb-2">
             Key Capsule Designers
           </div>
-          <div className="flex flex-wrap gap-1.5">
-            {data.favoriteBrands.map((brand, idx) => (
-              <span
-                key={idx}
-                className="px-2.5 py-1 rounded-md bg-[#FAF6EE] border border-[#ECE5DA] text-[11px] font-editorial text-[#1C1817]"
-              >
-                {brand}
-              </span>
-            ))}
-          </div>
+          {favoriteBrands.length > 0 ? (
+            <div className="flex flex-wrap gap-1.5">
+              {favoriteBrands.map((brand, idx) => (
+                <span
+                  key={idx}
+                  className="px-2.5 py-1 rounded-md bg-[#FAF6EE] border border-[#ECE5DA] text-[11px] font-editorial text-[#1C1817]"
+                >
+                  {brand}
+                </span>
+              ))}
+            </div>
+          ) : (
+            <p className="text-xs text-[#8C8379] italic">
+              No designer brands cataloged yet.
+            </p>
+          )}
         </div>
       </div>
 
@@ -145,9 +170,14 @@ export const StyleInsights: React.FC<StyleInsightsProps> = ({
           className="w-full py-2.5 px-4 rounded-full bg-[#FAF6EE] hover:bg-[#5B1924] text-[#1C1817] hover:text-[#FDFBF7] text-xs font-semibold border border-[#ECE5DA] hover:border-[#5B1924] transition-all flex items-center justify-center gap-2 cursor-pointer group active:scale-[0.98]"
         >
           <span>Explore Style Analytics</span>
-          <ArrowRight size={13} className="text-[#5B1924] group-hover:text-[#FDFBF7] group-hover:translate-x-1 transition-transform" />
+          <ArrowRight
+            size={13}
+            className="text-[#5B1924] group-hover:text-[#FDFBF7] group-hover:translate-x-1 transition-transform"
+          />
         </button>
       </div>
     </div>
   );
 };
+
+export default StyleInsights;
