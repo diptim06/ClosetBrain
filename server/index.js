@@ -5,6 +5,12 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import authRoutes from './routes/auth.js';
+import wardrobeRoutes from './routes/wardrobe.js';
+import outfitRoutes from './routes/outfits.js';
+import calendarRoutes from './routes/calendar.js';
+import { startCleanupWorker, stopCleanupWorker } from './services/cleanupWorker.js';
+import { isR2Configured } from './services/r2.js';
+import { getSafeGeminiStatus } from './services/gemini.js';
 
 dotenv.config();
 
@@ -120,18 +126,25 @@ app.use(
 
 // Mount API routes
 app.use('/api/auth', authRoutes);
+app.use('/api/wardrobe', wardrobeRoutes);
+app.use('/api/outfits', outfitRoutes);
+app.use('/api/calendar', calendarRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
   res.json({
     status: 'ok',
     database: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected',
+    storage: isR2Configured() ? 'configured' : 'pending',
+    ai: getSafeGeminiStatus(),
     environment: process.env.NODE_ENV || 'development',
   });
 });
 
 const server = app.listen(PORT, () => {
   console.log(`ClosetBrain Express backend running on http://localhost:${PORT}`);
+  // Initialize background cleanup & reconciliation worker
+  startCleanupWorker();
 });
 
 server.on('error', (err) => {
@@ -142,6 +155,21 @@ server.on('error', (err) => {
     console.error('Server error:', err);
   }
 });
+
+// Graceful shutdown handling
+const gracefulShutdown = (signal) => {
+  console.log(`\nReceived ${signal}. Shutting down gracefully...`);
+  stopCleanupWorker();
+  server.close(() => {
+    mongoose.connection.close(false).then(() => {
+      console.log('MongoDB connection closed. Server exited cleanly.');
+      process.exit(0);
+    });
+  });
+};
+
+process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
+process.on('SIGINT', () => gracefulShutdown('SIGINT'));
 
 // Keepalive interval so server never exits on idle Atlas timeouts
 setInterval(() => {}, 60000);

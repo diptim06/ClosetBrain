@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Search,
   Bell,
@@ -27,6 +28,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
   searchQuery = '',
   onSearchChange,
 }) => {
+  const navigate = useNavigate();
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const notifRef = useRef<HTMLDivElement>(null);
@@ -203,7 +205,10 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
               <div className="space-y-0.5 text-xs text-[#5E564E]">
                 <button
                   type="button"
-                  onClick={() => setShowProfileMenu(false)}
+                  onClick={() => {
+                    setShowProfileMenu(false);
+                    navigate('/settings');
+                  }}
                   className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-[#FAF6EE] hover:text-[#1C1817] transition-colors text-left cursor-pointer"
                 >
                   <Settings size={14} className="text-[#8C8379]" />
