@@ -12,6 +12,7 @@ import {
   isValidOtpFormat,
   OtpServiceError,
 } from '../services/otpService.js';
+import { authRateLimiter } from '../middleware/authRateLimiter.js';
 
 const router = express.Router();
 
@@ -68,7 +69,7 @@ async function invalidateUserSessions(req, userId) {
 // ----------------------------------------------------------------------------
 // 1. POST /api/auth/signup
 // ----------------------------------------------------------------------------
-router.post('/signup', requireDb, async (req, res) => {
+router.post('/signup', requireDb, authRateLimiter, async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
@@ -309,7 +310,7 @@ router.post('/resend-signup-otp', requireDb, resendVerificationHandler);
 // ----------------------------------------------------------------------------
 // 4. POST /api/auth/login
 // ----------------------------------------------------------------------------
-router.post('/login', requireDb, async (req, res) => {
+router.post('/login', requireDb, authRateLimiter, async (req, res) => {
   try {
     const { email, password } = req.body;
 

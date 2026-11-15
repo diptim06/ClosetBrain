@@ -154,20 +154,38 @@ export const InsightsPage: React.FC = () => {
             </div>
           ) : (
             <div className="space-y-3">
-              {colorDistribution.map((item) => {
-                const percentage = totalItems > 0 ? Math.round((item.count / totalItems) * 100) : 0;
+              {colorDistribution.map((item, idx) => {
+                const percentage =
+                  typeof item.percentage === 'number'
+                    ? item.percentage
+                    : totalItems > 0
+                    ? Math.round((item.count / totalItems) * 100)
+                    : 0;
+                const swatchColor = item.color || '#8C8379';
+                const labelText = item.label || 'Unknown';
+                const stableKey = item.label ? `color-${item.label}-${idx}` : `color-idx-${idx}`;
+
                 return (
-                  <div key={item.color} className="space-y-1">
+                  <div key={stableKey} className="space-y-1">
                     <div className="flex items-center justify-between text-xs">
-                      <span className="font-medium text-[#1C1817]">{item.color}</span>
+                      <span className="font-medium text-[#1C1817] flex items-center gap-1.5">
+                        <span
+                          className="w-2.5 h-2.5 rounded-full border border-black/10 shrink-0"
+                          style={{ backgroundColor: swatchColor }}
+                        />
+                        <span>{labelText}</span>
+                      </span>
                       <span className="text-[#8C8379]">
                         {item.count} items ({percentage}%)
                       </span>
                     </div>
                     <div className="h-2 w-full bg-[#FAF6EE] rounded-full overflow-hidden border border-[#ECE5DA]">
                       <div
-                        className="h-full bg-[#5B1924] rounded-full transition-all duration-500"
-                        style={{ width: `${Math.max(5, percentage)}%` }}
+                        className="h-full rounded-full transition-all duration-500"
+                        style={{
+                          width: `${Math.max(5, percentage)}%`,
+                          backgroundColor: swatchColor,
+                        }}
                       />
                     </div>
                   </div>

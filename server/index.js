@@ -4,6 +4,7 @@ import MongoStore from 'connect-mongo';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import dns from 'dns';
 import authRoutes from './routes/auth.js';
 import wardrobeRoutes from './routes/wardrobe.js';
 import outfitRoutes from './routes/outfits.js';
@@ -11,6 +12,7 @@ import calendarRoutes from './routes/calendar.js';
 import { startCleanupWorker, stopCleanupWorker } from './services/cleanupWorker.js';
 import { isR2Configured } from './services/r2.js';
 import { getSafeGeminiStatus } from './services/gemini.js';
+import { validateAuthRateLimitMax } from './middleware/authRateLimiter.js';
 
 dotenv.config();
 
@@ -20,6 +22,101 @@ const isProd = process.env.NODE_ENV === 'production';
 
 app.set('trust proxy', 1);
 
+/**
+ * Parses and strictly validates CORS origins based on environment.
+ * In production, fails fast if CORS_ORIGIN is missing, empty, or malformed,
+ * and never falls back to development localhost.
+ *
+ * @param {string|undefined} rawOriginString - Comma-separated origin list from environment
+ * @param {boolean} isProduction - Whether running in production mode
+ * @returns {string[]} Validated array of allowed origin strings
+ */
+export function parseAndValidateCorsOrigins(rawOriginString, isProduction) {
+  const defaultDevOrigins = ['http://localhost:5173', 'http://127.0.0.1:5173'];
+
+  if (!rawOriginString || !rawOriginString.trim()) {
+    if (isProduction) {
+      throw new Error(
+        'Configuration Error: CORS_ORIGIN environment variable is required in production but was not provided. Please set a valid comma-separated origin list (e.g. https://closetbrain.com).'
+      );
+    }
+    return defaultDevOrigins;
+  }
+
+  const origins = rawOriginString
+    .split(',')
+    .map((o) => o.trim())
+    .filter(Boolean);
+
+  if (origins.length === 0) {
+    if (isProduction) {
+      throw new Error(
+        'Configuration Error: CORS_ORIGIN is empty or contains only delimiters. At least one valid origin must be specified in production.'
+      );
+    }
+    return defaultDevOrigins;
+  }
+
+  // Validate each origin format
+  for (const origin of origins) {
+    try {
+      const url = new URL(origin);
+      if (url.protocol !== 'http:' && url.protocol !== 'https:') {
+        throw new Error(`Unsupported protocol '${url.protocol}'. Only http: and https: are allowed.`);
+      }
+      if (url.pathname !== '/' && url.pathname !== '') {
+        throw new Error(`Origin must not contain path elements: '${origin}'`);
+      }
+      if (origin !== url.origin) {
+        throw new Error(`Origin must be formatted as protocol://host[:port] without trailing slash, got '${origin}'`);
+      }
+
+      // In production, strictly reject localhost and loopback addresses
+      if (isProduction) {
+        const hostname = url.hostname.toLowerCase();
+        if (
+          hostname === 'localhost' ||
+          hostname === '127.0.0.1' ||
+          hostname === '0.0.0.0' ||
+          hostname === '::1' ||
+          hostname === '[::1]'
+        ) {
+          throw new Error(
+            `Configuration Error: Production CORS_ORIGIN must not contain localhost or loopback addresses, got '${origin}'.`
+          );
+        }
+      }
+    } catch (err) {
+      throw new Error(`Configuration Error: Invalid CORS_ORIGIN entry '${origin}': ${err.message}`);
+    }
+  }
+
+  if (isProduction) {
+    // In production, strictly use the validated configured origins; never trust localhost
+    return origins;
+  }
+
+  // In development, combine localhost defaults with any explicitly provided origins
+  return Array.from(new Set([...defaultDevOrigins, ...origins]));
+}
+
+// Fail-fast startup configuration validations
+const allowedOrigins = parseAndValidateCorsOrigins(process.env.CORS_ORIGIN, isProd);
+validateAuthRateLimitMax(process.env.AUTH_RATE_LIMIT_MAX);
+
+// Security hardening & defensive headers
+app.disable('x-powered-by');
+
+app.use((req, res, next) => {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'DENY');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  if (isProd) {
+    res.setHeader('Strict-Transport-Security', 'max-age=31536000');
+  }
+  next();
+});
+
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -27,12 +124,10 @@ app.use(express.urlencoded({ extended: false }));
 // CORS configuration (supporting credentials)
 app.use(
   cors({
-    origin: ['http://localhost:5173', 'http://127.0.0.1:5173'],
+    origin: allowedOrigins,
     credentials: true,
   })
 );
-
-import dns from 'dns';
 
 // Ensure reliable SRV resolution across local Wi-Fi router networks
 try {
