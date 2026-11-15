@@ -1,7 +1,41 @@
 import { GoogleGenAI, Type } from '@google/genai';
 
 export const DEFAULT_GEMINI_MODEL = 'gemini-flash-lite-latest';
-export const DEFAULT_GEMINI_TIMEOUT_MS = 25000; // 25 seconds timeout
+export const DEFAULT_GEMINI_TIMEOUT_MS = 45000; // 45 seconds timeout
+
+const STRICT_INTEGER_REGEX = /^[1-9]\d*$/;
+
+/**
+ * Validates and retrieves the configured Gemini timeout in milliseconds.
+ * Fails fast with a Configuration Error if an invalid, non-integer, negative,
+ * zero, decimal, or out-of-range value is explicitly provided.
+ *
+ * @param {string|number|undefined} [envVal=process.env.GEMINI_TIMEOUT_MS]
+ * @returns {number} Validated timeout in milliseconds
+ */
+export function validateGeminiTimeoutMs(envVal = process.env.GEMINI_TIMEOUT_MS) {
+  if (envVal === undefined || envVal === null || envVal === '') {
+    return DEFAULT_GEMINI_TIMEOUT_MS;
+  }
+
+  const trimmed = String(envVal).trim();
+  if (!STRICT_INTEGER_REGEX.test(trimmed)) {
+    throw new Error(
+      `Configuration Error: GEMINI_TIMEOUT_MS must be a strictly formatted positive integer in milliseconds (1000-300000), got "${envVal}".`
+    );
+  }
+
+  const parsed = parseInt(trimmed, 10);
+  if (parsed < 1000 || parsed > 300000) {
+    throw new Error(
+      `Configuration Error: GEMINI_TIMEOUT_MS must be between 1000 and 300000 ms (1s-5m), got ${parsed}.`
+    );
+  }
+
+  return parsed;
+}
+
+export const getGeminiTimeoutMs = validateGeminiTimeoutMs;
 
 // Allowed categories matching ClosetBrain Garment schema
 export const VALID_CATEGORIES = [
@@ -72,6 +106,7 @@ export function getSafeGeminiStatus() {
   return {
     configured: isGeminiConfigured(),
     model: getGeminiModel(),
+    timeoutMs: validateGeminiTimeoutMs(),
   };
 }
 
@@ -439,6 +474,11 @@ export function validateGarmentAnalysis(raw) {
 
 /**
  * Executes a promise with an enforced timeout.
+ *
+ * NOTE ON CANCELLATION: withTimeout uses Promise.race() to enforce a deadline on the caller side.
+ * It does NOT cancel the underlying remote HTTP request initiated by @google/genai, as the SDK
+ * does not accept an external AbortSignal in generateContent. The socket will remain active until
+ * Google responds or the TCP connection terminates.
  */
 function withTimeout(promise, ms, operationName = 'Gemini analysis') {
   let timer;
@@ -478,12 +518,13 @@ export async function analyzeGarmentImage(imageBuffer, options = {}) {
 
   const modelName = getGeminiModel();
   const mimeType = options.mimeType || 'image/webp';
-  const timeoutMs = options.timeoutMs || parseInt(process.env.GEMINI_TIMEOUT_MS, 10) || DEFAULT_GEMINI_TIMEOUT_MS;
+  const timeoutMs = options.timeoutMs || validateGeminiTimeoutMs();
 
   // Initialize official Google Gen AI SDK client
   const ai = new GoogleGenAI({ apiKey: apiKey.trim() });
 
   const base64Data = imageBuffer.toString('base64');
+  const startTime = Date.now();
 
   try {
     const requestPromise = ai.models.generateContent({
@@ -523,7 +564,14 @@ export async function analyzeGarmentImage(imageBuffer, options = {}) {
     // Server-side strict schema validation and normalization
     return validateGarmentAnalysis(parsed);
   } catch (err) {
+    const elapsedMs = Date.now() - startTime;
     const classification = classifyProviderError(err);
+
+    // Safe diagnostic logging: Never logs API keys, headers, image buffers, or request payloads.
+    console.error(
+      `[AI Vision Error] Operation: "analyzeGarmentImage" | Model: "${modelName}" | Elapsed: ${elapsedMs}ms | Status: ${classification.status} | Code: ${classification.code} | Category: ${classification.category} | Reason: ${classification.safeMessage}`
+    );
+
     const sanitizedError = new Error(classification.safeMessage);
     sanitizedError.status = classification.status;
     sanitizedError.code = classification.code;
@@ -603,7 +651,7 @@ export async function generateOutfitRecommendations({
   }
 
   const modelName = getGeminiModel();
-  const timeoutMs = options.timeoutMs || parseInt(process.env.GEMINI_TIMEOUT_MS, 10) || DEFAULT_GEMINI_TIMEOUT_MS;
+  const timeoutMs = options.timeoutMs || validateGeminiTimeoutMs();
   const boundedCount = Math.min(Math.max(1, parseInt(count, 10) || 3), 4);
 
   const ai = options.aiInstance || new GoogleGenAI({ apiKey: apiKey.trim() });
@@ -704,6 +752,9 @@ export default {
   isGeminiConfigured,
   getGeminiModel,
   getSafeGeminiStatus,
+  DEFAULT_GEMINI_TIMEOUT_MS,
+  validateGeminiTimeoutMs,
+  getGeminiTimeoutMs,
   analyzeGarmentImage,
   validateGarmentAnalysis,
   generateOutfitRecommendations,

@@ -11,7 +11,7 @@ import outfitRoutes from './routes/outfits.js';
 import calendarRoutes from './routes/calendar.js';
 import { startCleanupWorker, stopCleanupWorker } from './services/cleanupWorker.js';
 import { isR2Configured } from './services/r2.js';
-import { getSafeGeminiStatus } from './services/gemini.js';
+import { getSafeGeminiStatus, validateGeminiTimeoutMs } from './services/gemini.js';
 import { validateAuthRateLimitMax } from './middleware/authRateLimiter.js';
 
 dotenv.config();
@@ -103,6 +103,7 @@ export function parseAndValidateCorsOrigins(rawOriginString, isProduction) {
 // Fail-fast startup configuration validations
 const allowedOrigins = parseAndValidateCorsOrigins(process.env.CORS_ORIGIN, isProd);
 validateAuthRateLimitMax(process.env.AUTH_RATE_LIMIT_MAX);
+validateGeminiTimeoutMs(process.env.GEMINI_TIMEOUT_MS);
 
 // Security hardening & defensive headers
 app.disable('x-powered-by');

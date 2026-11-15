@@ -16,6 +16,7 @@ import {
   Sliders,
   ChevronDown,
   ChevronUp,
+  RotateCcw,
 } from 'lucide-react';
 import {
   Garment,
@@ -113,6 +114,7 @@ export const AddGarmentModal: React.FC<AddGarmentModalProps> = ({
   onGarmentCreated,
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const isAnalyzingRef = useRef(false);
 
   // Modal Flow Step
   const [step, setStep] = useState<ModalFlowStep>('upload');
@@ -176,6 +178,7 @@ export const AddGarmentModal: React.FC<AddGarmentModalProps> = ({
     setStep('upload');
     setIsUploading(false);
     setIsAnalyzing(false);
+    isAnalyzingRef.current = false;
     setIsSubmitting(false);
     setUploadId(null);
     setPreviewUrl(null);
@@ -258,7 +261,8 @@ export const AddGarmentModal: React.FC<AddGarmentModalProps> = ({
 
   // 2. Trigger Gemini AI Assistant
   const handleRunAiAnalysis = async () => {
-    if (!uploadId || isAnalyzing) return;
+    if (!uploadId || isAnalyzingRef.current) return;
+    isAnalyzingRef.current = true;
     setIsAnalyzing(true);
     setErrorMessage(null);
 
@@ -334,6 +338,7 @@ export const AddGarmentModal: React.FC<AddGarmentModalProps> = ({
       // Fallback to manual entry while preserving the uploaded image
       setStep('edit_form');
     } finally {
+      isAnalyzingRef.current = false;
       setIsAnalyzing(false);
     }
   };
@@ -530,9 +535,31 @@ export const AddGarmentModal: React.FC<AddGarmentModalProps> = ({
           <div className="mx-6 mt-4 p-3 bg-red-50 border border-red-200 rounded-xl flex items-center gap-2.5 text-xs text-red-800 animate-in fade-in">
             <AlertCircle size={16} className="shrink-0 text-red-600" />
             <span className="flex-1">{errorMessage}</span>
+            {uploadId && !aiAnalyzed && (step === 'edit_form' || step === 'preview_choice') && (
+              <button
+                type="button"
+                onClick={handleRunAiAnalysis}
+                disabled={isAnalyzing}
+                className="px-2.5 py-1 bg-red-100 hover:bg-red-200 text-red-900 font-semibold rounded-lg flex items-center gap-1.5 transition-colors cursor-pointer disabled:opacity-50 shrink-0"
+              >
+                {isAnalyzing ? (
+                  <>
+                    <Loader2 size={12} className="animate-spin text-red-800" />
+                    <span>Retrying...</span>
+                  </>
+                ) : (
+                  <>
+                    <RotateCcw size={12} />
+                    <span>Retry Analysis</span>
+                  </>
+                )}
+              </button>
+            )}
             <button
+              type="button"
               onClick={() => setErrorMessage(null)}
-              className="text-red-500 hover:text-red-700 text-xs font-bold"
+              disabled={isAnalyzing}
+              className="text-red-500 hover:text-red-700 text-xs font-bold cursor-pointer disabled:opacity-50"
             >
               Dismiss
             </button>
@@ -1043,6 +1070,33 @@ export const AddGarmentModal: React.FC<AddGarmentModalProps> = ({
                     <p className="italic font-editorial text-[#1C1817]">
                       "{naturalExplanation}"
                     </p>
+                  </div>
+                )}
+
+                {!aiAnalyzed && uploadId && (
+                  <div className="p-3 bg-[#FAF6EE] rounded-xl border border-[#ECE5DA] text-[11px] text-[#5E564E] flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-1.5">
+                      <Sparkles size={14} className="text-[#5B1924] shrink-0" />
+                      <span>Want AI suggestions?</span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={handleRunAiAnalysis}
+                      disabled={isAnalyzing}
+                      className="px-2.5 py-1 bg-[#5B1924] hover:bg-[#48131C] text-white text-[10px] font-semibold rounded-lg flex items-center gap-1 transition-colors cursor-pointer disabled:opacity-50 shrink-0"
+                    >
+                      {isAnalyzing ? (
+                        <>
+                          <Loader2 size={10} className="animate-spin text-white" />
+                          <span>Analyzing...</span>
+                        </>
+                      ) : (
+                        <>
+                          <RotateCcw size={10} />
+                          <span>Retry Analysis</span>
+                        </>
+                      )}
+                    </button>
                   </div>
                 )}
               </div>
