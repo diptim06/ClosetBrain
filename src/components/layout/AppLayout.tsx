@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Outlet } from 'react-router-dom';
 import { AppSidebar, DashboardNavTab } from './AppSidebar';
 import { AppHeader } from './AppHeader';
 import { AuthUser } from '../landing/AuthPanel';
@@ -10,16 +11,18 @@ interface AppLayoutProps {
   onSelectTab?: (tab: DashboardNavTab) => void;
   searchQuery?: string;
   onSearchChange?: (query: string) => void;
-  children: React.ReactNode;
+  closetCount?: number;
+  children?: React.ReactNode;
 }
 
 export const AppLayout: React.FC<AppLayoutProps> = ({
   user,
   onLogout,
-  activeTab = 'dashboard',
-  onSelectTab = () => {},
+  activeTab,
+  onSelectTab,
   searchQuery = '',
   onSearchChange,
+  closetCount,
   children,
 }) => {
   // Read collapsed state from localStorage if available
@@ -56,6 +59,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
         mobileOpen={mobileMenuOpen}
         onCloseMobile={() => setMobileMenuOpen(false)}
         onLogout={onLogout}
+        closetCount={closetCount}
       />
 
       {/* Main Content Viewport */}
@@ -75,7 +79,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
 
         {/* Page Content */}
         <main className="flex-1 w-full max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 space-y-6 lg:space-y-8">
-          {children}
+          {children ?? <Outlet />}
         </main>
       </div>
     </div>

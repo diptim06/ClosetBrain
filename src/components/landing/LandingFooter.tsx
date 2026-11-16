@@ -7,7 +7,7 @@ interface LandingFooterProps {
 
 export const LandingFooter: React.FC<LandingFooterProps> = ({ onOpenApp }) => {
   return (
-    <footer className="relative z-20 w-full bg-[#FDFBF7] border-t border-[#E6DFD3] py-12 sm:py-16 text-[#5E564E]">
+    <footer className="relative z-20 w-full bg-white border-t border-[#EAE4D9] py-12 sm:py-16 text-[#5E564E]">
       <div className="max-w-7xl mx-auto px-5 sm:px-8 md:px-14 lg:px-24">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8 pb-10 sm:pb-12 border-b border-[#E6DFD3]">
           {/* Logo & Tagline */}

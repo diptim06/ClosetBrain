@@ -1,4 +1,5 @@
 import React from 'react';
+import { NavLink, Link, useLocation } from 'react-router-dom';
 import {
   LayoutDashboard,
   Shirt,
@@ -19,6 +20,7 @@ import { AuthUser } from '../landing/AuthPanel';
 export type DashboardNavTab =
   | 'dashboard'
   | 'closet'
+  | 'outfits'
   | 'studio'
   | 'lookbook'
   | 'planner'
@@ -29,20 +31,23 @@ export type DashboardNavTab =
 interface AppSidebarProps {
   collapsed: boolean;
   onToggleCollapse: () => void;
-  activeTab: DashboardNavTab;
-  onSelectTab: (tab: DashboardNavTab) => void;
+  activeTab?: DashboardNavTab;
+  onSelectTab?: (tab: DashboardNavTab) => void;
   user: AuthUser;
   mobileOpen: boolean;
   onCloseMobile: () => void;
   onLogout: () => void;
+  closetCount?: number;
 }
 
 interface NavItem {
   id: DashboardNavTab;
   label: string;
+  to: string;
   icon: React.ComponentType<{ className?: string; size?: number }>;
   badge?: string;
   section: 'main' | 'curation' | 'account';
+  exact?: boolean;
 }
 
 export const AppSidebar: React.FC<AppSidebarProps> = ({
@@ -54,17 +59,86 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
   mobileOpen,
   onCloseMobile,
   onLogout,
+  closetCount,
 }) => {
+  const location = useLocation();
+
   const navItems: NavItem[] = [
-    { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, section: 'main' },
-    { id: 'closet', label: 'My Closet', icon: Shirt, badge: '100', section: 'main' },
-    { id: 'studio', label: 'Outfit Studio', icon: Sparkles, badge: 'AI', section: 'curation' },
-    { id: 'lookbook', label: 'Lookbook', icon: BookOpen, section: 'curation' },
-    { id: 'planner', label: 'Planner', icon: Calendar, section: 'curation' },
-    { id: 'insights', label: 'Style Insights', icon: Compass, section: 'curation' },
-    { id: 'shopping', label: 'Shopping Assistant', icon: ShoppingBag, section: 'account' },
-    { id: 'settings', label: 'Settings', icon: Settings, section: 'account' },
+    {
+      id: 'dashboard',
+      label: 'Dashboard',
+      to: '/dashboard',
+      icon: LayoutDashboard,
+      section: 'main',
+      exact: true,
+    },
+    {
+      id: 'closet',
+      label: 'My Wardrobe',
+      to: '/wardrobe',
+      icon: Shirt,
+      badge: closetCount !== undefined ? String(closetCount) : undefined,
+      section: 'main',
+    },
+    {
+      id: 'outfits',
+      label: 'Outfits',
+      to: '/outfits',
+      icon: Sparkles,
+      section: 'curation',
+    },
+    {
+      id: 'planner',
+      label: 'Planner',
+      to: '/calendar',
+      icon: Calendar,
+      section: 'curation',
+    },
+    {
+      id: 'insights',
+      label: 'Style Insights',
+      to: '/insights',
+      icon: Compass,
+      section: 'curation',
+    },
+    {
+      id: 'shopping',
+      label: 'Style Assistant',
+      to: '/assistant',
+      icon: ShoppingBag,
+      section: 'account',
+    },
+    {
+      id: 'settings',
+      label: 'Settings',
+      to: '/settings',
+      icon: Settings,
+      section: 'account',
+    },
   ];
+
+  const isItemActive = (item: NavItem): boolean => {
+    if (item.exact) {
+      return location.pathname === item.to;
+    }
+    if (item.id === 'closet') {
+      return location.pathname.startsWith('/wardrobe') || location.pathname.startsWith('/closet');
+    }
+    if (item.id === 'outfits') {
+      return (
+        location.pathname.startsWith('/outfits') ||
+        location.pathname.startsWith('/studio') ||
+        location.pathname.startsWith('/lookbook')
+      );
+    }
+    if (item.id === 'planner') {
+      return location.pathname.startsWith('/calendar') || location.pathname.startsWith('/planner');
+    }
+    if (item.id === 'shopping') {
+      return location.pathname.startsWith('/assistant') || location.pathname.startsWith('/shopping');
+    }
+    return location.pathname.startsWith(item.to);
+  };
 
   const renderNavSection = (sectionKey: 'main' | 'curation' | 'account', sectionTitle?: string) => {
     const items = navItems.filter((item) => item.section === sectionKey);
@@ -77,13 +151,13 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
         )}
         {items.map((item) => {
           const Icon = item.icon;
-          const isActive = activeTab === item.id;
+          const isActive = isItemActive(item);
           return (
-            <button
+            <NavLink
               key={item.id}
-              type="button"
+              to={item.to}
               onClick={() => {
-                onSelectTab(item.id);
+                if (onSelectTab) onSelectTab(item.id);
                 onCloseMobile();
               }}
               title={collapsed ? item.label : undefined}
@@ -118,7 +192,7 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
                   )}
                 </div>
               )}
-            </button>
+            </NavLink>
           );
         })}
       </div>
@@ -130,8 +204,9 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
       {/* Brand Header */}
       <div>
         <div className="flex items-center justify-between pb-4 border-b border-[#ECE5DA]">
-          <a
-            href="/"
+          <Link
+            to="/dashboard"
+            onClick={onCloseMobile}
             className={`flex items-center gap-2.5 group cursor-pointer ${
               collapsed ? 'justify-center w-full' : ''
             }`}
@@ -149,7 +224,7 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
                 </span>
               </div>
             )}
-          </a>
+          </Link>
 
           {/* Desktop collapse toggle */}
           <button
@@ -186,8 +261,9 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
 
       {/* Footer Profile & Logout Card */}
       <div className="pt-3 border-t border-[#ECE5DA] space-y-2">
-        <a
-          href="/"
+        <Link
+          to="/"
+          onClick={onCloseMobile}
           className={`flex items-center gap-2 px-3 py-1.5 rounded-xl text-[11px] text-[#8C8379] hover:text-[#5B1924] hover:bg-[#FAF6EE] transition-colors ${
             collapsed ? 'justify-center px-1' : ''
           }`}
@@ -195,7 +271,7 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
         >
           <ArrowUpRight size={13} className="shrink-0" />
           {!collapsed && <span>View Editorial Landing</span>}
-        </a>
+        </Link>
 
         <div
           className={`p-2 rounded-2xl bg-[#FAF6EE] border border-[#ECE5DA] flex items-center gap-2.5 transition-all ${

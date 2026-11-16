@@ -115,7 +115,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             >
               {/* 1. Category Eyebrow: Elegantly split across lines on mobile */}
               <div className="flex flex-col xs:flex-row items-start xs:items-center gap-1.5 xs:gap-2">
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold tracking-wider uppercase bg-[#F2ECE1] text-[#5B1924] border border-[#E6DFD3]">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold tracking-wider uppercase bg-white text-[#5B1924] border border-[#EAE4D9] shadow-sm">
                   <Sparkles className="w-3.5 h-3.5 text-[#5B1924]" />
                   Smart Digital Wardrobe
                 </span>
@@ -152,7 +152,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
                   <a
                     href="#how-it-works"
-                    className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 sm:gap-2 px-4 py-2.5 sm:px-7 sm:py-3.5 rounded-full bg-[#F2ECE1] text-[#1C1817] text-xs sm:text-base font-medium border border-[#E6DFD3] hover:border-[#5B1924]/30 hover:bg-[#E8E0CE] transition-all cursor-pointer text-center whitespace-nowrap"
+                    className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 sm:gap-2 px-4 py-2.5 sm:px-7 sm:py-3.5 rounded-full bg-white text-[#1C1817] text-xs sm:text-base font-medium border border-[#EAE4D9] hover:border-[#5B1924]/30 hover:bg-[#FAF7F2] shadow-sm transition-all cursor-pointer text-center whitespace-nowrap"
                   >
                     <span>How It Works</span>
                   </a>

@@ -1,21 +1,19 @@
 import React from 'react';
 import { Shirt, Layers, Calendar, TrendingUp, ArrowUpRight } from 'lucide-react';
-import { ClosetStatsData } from '../../../data/mockData';
 
 interface WardrobeOverviewProps {
-  stats?: ClosetStatsData;
+  totalItems?: number;
+  recentlyAddedThisWeek?: number;
+  isLoading?: boolean;
   onViewCloset?: () => void;
   onViewOutfits?: () => void;
   onViewPlanner?: () => void;
 }
 
 export const WardrobeOverview: React.FC<WardrobeOverviewProps> = ({
-  stats = {
-    totalItems: 100,
-    totalOutfits: 34,
-    favoritesCount: 12,
-    recentlyAddedThisWeek: 5,
-  },
+  totalItems = 0,
+  recentlyAddedThisWeek = 0,
+  isLoading = false,
   onViewCloset,
   onViewOutfits,
   onViewPlanner,
@@ -24,32 +22,36 @@ export const WardrobeOverview: React.FC<WardrobeOverviewProps> = ({
     {
       id: 'items',
       label: 'Wardrobe Items',
-      value: stats.totalItems,
-      sublabel: `+${stats.recentlyAddedThisWeek} this week`,
+      value: isLoading ? '...' : totalItems,
+      sublabel: isLoading
+        ? 'Updating...'
+        : recentlyAddedThisWeek > 0
+        ? `+${recentlyAddedThisWeek} this week`
+        : 'Active collection',
       icon: Shirt,
       action: onViewCloset,
     },
     {
       id: 'outfits',
       label: 'Curated Outfits',
-      value: stats.totalOutfits,
-      sublabel: `${stats.favoritesCount} favorited`,
+      value: '—',
+      sublabel: 'Studio Preview',
       icon: Layers,
       action: onViewOutfits,
     },
     {
       id: 'planned',
       label: 'Scheduled Looks',
-      value: 4,
-      sublabel: 'Active calendar',
+      value: '—',
+      sublabel: 'Planner Preview',
       icon: Calendar,
       action: onViewPlanner,
     },
     {
       id: 'utilization',
       label: 'Staple Rotation',
-      value: '92%',
-      sublabel: 'Neutral efficiency',
+      value: '—',
+      sublabel: 'Wear log coming soon',
       icon: TrendingUp,
       action: onViewCloset,
     },
@@ -95,3 +97,5 @@ export const WardrobeOverview: React.FC<WardrobeOverviewProps> = ({
     </div>
   );
 };
+
+export default WardrobeOverview;

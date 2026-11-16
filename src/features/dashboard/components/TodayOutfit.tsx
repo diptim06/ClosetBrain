@@ -105,7 +105,7 @@ export const TodayOutfit: React.FC<TodayOutfitProps> = ({
           <div className="flex items-center gap-2">
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] sm:text-[11px] font-semibold tracking-wider uppercase bg-[#5B1924] text-[#FDFBF7]">
               <Sparkles className="w-3 h-3 text-[#FDFBF7]" />
-              <span>Primary Daily Focal Look</span>
+              <span>Outfit Studio Preview • Sample Curation</span>
             </span>
             <span className="text-[11px] font-medium text-[#9A5360] bg-[#B76E79]/10 border border-[#B76E79]/20 px-2.5 py-0.5 rounded-full uppercase tracking-wide">
               Neutral Capsule
